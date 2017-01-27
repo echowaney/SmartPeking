@@ -10,6 +10,8 @@ import android.widget.RadioGroup;
 
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.adapter.MainAdapter;
+import com.example.hashwaney.zhbj33.base.BaseFragment;
+import com.example.hashwaney.zhbj33.base.OnLoadDataOperator;
 import com.example.hashwaney.zhbj33.fragment.GovaffairsFragment;
 import com.example.hashwaney.zhbj33.fragment.HomeFragment;
 import com.example.hashwaney.zhbj33.fragment.NewsCenterFragment;
@@ -50,7 +52,7 @@ public class MainActivity
     @BindView(R.id.rg)
     RadioGroup  mRg;
     public SlidingMenu mSlidingMenu;
-
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +131,16 @@ public class MainActivity
         mViewpager.setCurrentItem(itemid,false);
 
         //            mViewpager.getCurrentItem()
+        //通过fragmentmanger
+//        getSupportFragmentManager().findFragmentById(itemid);
+        //这里就是加载数据的入口 当点击了底部button的时候,就得到相应的fragment,其中有些fragment需要联网
+//        有些就不需要 ,只要是联网接口的实现类,就可以进行联网操作
+        BaseFragment fragment = (BaseFragment) mFragmentList.get(itemid);
+        if (fragment instanceof OnLoadDataOperator){
+            ((OnLoadDataOperator)fragment).onLoadMoreData(url);
+            ((OnLoadDataOperator)fragment).onLoadNewData(url);
+
+        }
 
     }
 
