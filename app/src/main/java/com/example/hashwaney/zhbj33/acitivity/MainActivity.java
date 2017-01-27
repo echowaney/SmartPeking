@@ -12,6 +12,7 @@ import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.adapter.MainAdapter;
 import com.example.hashwaney.zhbj33.base.BaseFragment;
 import com.example.hashwaney.zhbj33.base.OnLoadDataOperator;
+import com.example.hashwaney.zhbj33.bean.NewsCenterBean;
 import com.example.hashwaney.zhbj33.fragment.GovaffairsFragment;
 import com.example.hashwaney.zhbj33.fragment.HomeFragment;
 import com.example.hashwaney.zhbj33.fragment.NewsCenterFragment;
@@ -177,4 +178,13 @@ public class MainActivity
     public void onPageScrollStateChanged(int state) {
 
     }
+
+
+    //定义一个方法去接收来自NewsCenterFragment的数据
+    private List<NewsCenterBean.NewsMenuBean> mNewsMenuBeenLists;
+    public void  setNewsMenuBeenLists(List<NewsCenterBean.NewsMenuBean> newsMenuBeenLists){
+        mNewsMenuBeenLists =newsMenuBeenLists;
+
+    }
+
 }
