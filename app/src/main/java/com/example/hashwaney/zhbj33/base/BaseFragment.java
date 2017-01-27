@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.hashwaney.zhbj33.R;
+import com.example.hashwaney.zhbj33.acitivity.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,6 +91,10 @@ public abstract class BaseFragment
 
     @OnClick(R.id.ib_menu)
     public void onClick() {
+        //控制slidingmenu的切换
+        //Slidingmenu ----MainActivity
+        ((MainActivity)getActivity()).mSlidingMenu.toggle();
+
 
     }
 }

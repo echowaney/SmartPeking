@@ -33,7 +33,7 @@ public class HomeFragment
     @Override
     public void initTitle() {
         setTitle("首页");
-        setIbMenu(true);
+        setIbMenu(false);
         setIbPic(false);
     }
 

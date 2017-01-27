@@ -28,9 +28,9 @@ public class GovaffairsFragment
 
     @Override
     public void initTitle() {
-        setIbMenu(false);
+        setIbMenu(true);
         setTitle("政务");
-        setIbPic(true);
+        setIbPic(false);
     }
 
     @Override

@@ -17,7 +17,7 @@ public class SettingFragment
 
     @Override
     public void initTitle() {
-        setIbPic(false);
+        setIbPic(true);
         setTitle("设置");
         setIbMenu(false);
     }

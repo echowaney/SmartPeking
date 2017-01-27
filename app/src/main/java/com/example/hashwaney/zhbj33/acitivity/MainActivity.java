@@ -25,6 +25,8 @@ import butterknife.ButterKnife;
 
 import static com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.LEFT;
 import static com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.SLIDING_CONTENT;
+import static com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.TOUCHMODE_FULLSCREEN;
+import static com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.TOUCHMODE_NONE;
 
 public class MainActivity
         extends AppCompatActivity
@@ -47,6 +49,7 @@ public class MainActivity
     RadioButton mRbSetting;
     @BindView(R.id.rg)
     RadioGroup  mRg;
+    public SlidingMenu mSlidingMenu;
 
 
     @Override
@@ -66,12 +69,13 @@ public class MainActivity
     }
     //初始化侧滑菜单
     private void initSlidingMenu() {
-        SlidingMenu slidingMenu =new SlidingMenu(this);
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
-        slidingMenu.setMode(LEFT);
-        slidingMenu.setBehindWidth(250);
-        slidingMenu.setBackgroundColor(Color.RED);
-        slidingMenu.attachToActivity(this,SLIDING_CONTENT);
+        mSlidingMenu = new SlidingMenu(this);
+        mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
+        mSlidingMenu.setMode(LEFT);
+        mSlidingMenu.setBehindWidth(250);
+        mSlidingMenu.setBackgroundColor(Color.RED);
+        mSlidingMenu.setMenu(R.layout.activity_main_menu);
+        mSlidingMenu.attachToActivity(this, SLIDING_CONTENT);
 
 
 
@@ -98,19 +102,27 @@ public class MainActivity
         switch (checkedId) {
             case R.id.rb_home :
                 itemid=0;
+                //设置首页不让slidingmenu滑出
+                mSlidingMenu.setTouchModeAbove(TOUCHMODE_NONE);
+
                  break;
             case R.id.rb_newscenter:
                 itemid =1;
+                mSlidingMenu.setTouchModeAbove(TOUCHMODE_FULLSCREEN);
                 break;
             case R.id.rb_smartservice:
                 itemid=2;
+                mSlidingMenu.setTouchModeAbove(TOUCHMODE_FULLSCREEN);
                 break;
             case R.id.rb_govaffairs:
                 itemid=3;
+                mSlidingMenu.setTouchModeAbove(TOUCHMODE_FULLSCREEN);
                 break;
 
             case R.id.rb_setting:
                 itemid=4;
+                //设置 设置界面不让slidingmenu滑出
+                mSlidingMenu.setTouchModeAbove(TOUCHMODE_NONE);
                  break;
 
         }
