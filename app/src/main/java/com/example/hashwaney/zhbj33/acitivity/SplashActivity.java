@@ -1,6 +1,8 @@
 package com.example.hashwaney.zhbj33.acitivity;
 
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -10,6 +12,8 @@ import android.widget.RelativeLayout;
 
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.base.BaseActivity;
+import com.example.hashwaney.zhbj33.constant.Contant;
+import com.example.hashwaney.zhbj33.utils.SPUtils;
 import com.example.hashwaney.zhbj33.utils.ThreadUtils;
 
 import butterknife.BindView;
@@ -26,7 +30,9 @@ public class SplashActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         ButterKnife.bind(this);
         Animation animation = creatAnimation();
         mRl.startAnimation(animation);
@@ -81,15 +87,25 @@ public class SplashActivity
     @Override
     public void onAnimationEnd(Animation animation) {
             //主线程不能进行耗时操作
-        //handler
-        ThreadUtils.runOnMainThread(new Runnable() {
-            @Override
-            public void run() {
-              //进入到向导界面
-                startActivity(GuideActivity.class,true);
+        //动画结束后.判断是否是第一次进入到向导界面
+        boolean hasGuide = SPUtils.getBoolean(this, Contant.CONTANT_KEY_FISRT_TO_GUDIE, false);
+        if (!hasGuide){
+            //handler
+            ThreadUtils.runOnMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    //进入到向导界面
+                    startActivity(GuideActivity.class,true);
 
-            }
-        },2000);
+                }
+            },2000);
+
+        }else{
+            //进入主界面
+            startActivity(MainActivity.class,true);
+
+        }
+
 
 
     }

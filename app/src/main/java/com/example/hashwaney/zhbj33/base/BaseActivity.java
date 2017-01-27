@@ -1,14 +1,14 @@
 package com.example.hashwaney.zhbj33.base;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by HashWaney on 2017/1/27.
  */
 
 public class BaseActivity
-        extends Activity
+        extends AppCompatActivity
 {
 
     //跳转界面

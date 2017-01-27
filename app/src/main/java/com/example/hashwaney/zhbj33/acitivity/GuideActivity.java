@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.adapter.GuideAdapter;
 import com.example.hashwaney.zhbj33.base.BaseActivity;
+import com.example.hashwaney.zhbj33.constant.Contant;
+import com.example.hashwaney.zhbj33.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,8 +152,8 @@ public class GuideActivity
 
     @OnClick(R.id.btn_start)
     public void onClick() {
-
-
-
+        //进入到主界面 ，并将状态进行一次保存
+        SPUtils.saveBoolean(this, Contant.CONTANT_KEY_FISRT_TO_GUDIE,true);
+        startActivity(MainActivity.class,true);
     }
 }
