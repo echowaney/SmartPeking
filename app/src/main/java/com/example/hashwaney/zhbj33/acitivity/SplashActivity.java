@@ -1,6 +1,5 @@
-package com.example.hashwaney.zhbj33;
+package com.example.hashwaney.zhbj33.acitivity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -9,11 +8,16 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.widget.RelativeLayout;
 
+import com.example.hashwaney.zhbj33.R;
+import com.example.hashwaney.zhbj33.base.BaseActivity;
+import com.example.hashwaney.zhbj33.utils.ThreadUtils;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SplashActivity
-        extends Activity
+        extends BaseActivity
+        implements Animation.AnimationListener
 {
 
     @BindView(R.id.rl)
@@ -26,6 +30,8 @@ public class SplashActivity
         ButterKnife.bind(this);
         Animation animation = creatAnimation();
         mRl.startAnimation(animation);
+        //动画结束后延时两秒进入到主界面
+        animation.setAnimationListener(this);
 
     }
 
@@ -63,6 +69,33 @@ public class SplashActivity
         set.addAnimation(alphaAnimation);
 
         return set;
+
+    }
+
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+            //主线程不能进行耗时操作
+        //handler
+        ThreadUtils.runOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+              //进入到向导界面
+                startActivity(GuideActivity.class,true);
+
+            }
+        },2000);
+
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
 
     }
 }
