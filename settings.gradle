@@ -1,0 +1,2 @@
+include ':app', ':library-slidingmenu'
+include ':library-pagerindicator'
