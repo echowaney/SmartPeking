@@ -1,14 +1,20 @@
 package com.example.hashwaney.zhbj33.base;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.example.hashwaney.zhbj33.R;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by HashWaney on 2017/1/27.
@@ -17,6 +23,15 @@ import android.widget.TextView;
 public abstract class BaseFragment
         extends Fragment
 {
+    @BindView(R.id.ib_menu)
+    ImageButton mIbMenu;
+    @BindView(R.id.tv_title)
+    TextView    mTvTitle;
+    @BindView(R.id.ib_pic)
+    ImageButton mIbPic;
+    @BindView(R.id.fl_container)
+    FrameLayout mFlContainer;
+
     //加载布局
     @Nullable
     @Override
@@ -24,19 +39,57 @@ public abstract class BaseFragment
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState)
     {
-        TextView textView =new TextView(container.getContext());
-        textView.setGravity(Gravity.CENTER);
-        textView.setTextColor(Color.RED);
-        textView.setTextSize(20);
-        return textView;
+        View view = inflater.inflate(R.layout.fragment_tab_base, container, false);
+        ButterKnife.bind(this, view);
+        return view;
+
+
     }
+    //设置标题 子类必须实现
+    public abstract void initTitle();
+
+
+    //初始化内容
+    public abstract  View initContent();
+
+    //设置标题
+    public void setTitle(String title){
+        mTvTitle.setText(title);
+
+    }
+    //设置菜单按钮
+    public void setIbMenu(boolean isShow)
+    {
+        mIbMenu.setVisibility(isShow?View.VISIBLE:View.GONE);
+
+    }
+    //设置组图按钮
+    public void setIbPic(boolean isShow){
+
+        mIbPic.setVisibility(isShow?View.VISIBLE:View.GONE);
+    }
+
 
     //布局加载完成 ---有视图的时候进行方法的调用
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setContent();
+        //setContent();
+        initTitle();
+        //清空容器
+        mFlContainer.removeAllViews();
+        //将内容添加到容器中
+        mFlContainer.addView(initContent());
+
+
     }
+
     //将不同的交由子类去实现
-    public abstract void setContent();
+//    public abstract void setContent();
+
+
+    @OnClick(R.id.ib_menu)
+    public void onClick() {
+
+    }
 }

@@ -23,6 +23,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.LEFT;
 import static com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.SLIDING_CONTENT;
 
 public class MainActivity
@@ -66,7 +67,8 @@ public class MainActivity
     //初始化侧滑菜单
     private void initSlidingMenu() {
         SlidingMenu slidingMenu =new SlidingMenu(this);
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);
+        slidingMenu.setMode(LEFT);
         slidingMenu.setBehindWidth(250);
         slidingMenu.setBackgroundColor(Color.RED);
         slidingMenu.attachToActivity(this,SLIDING_CONTENT);

@@ -1,5 +1,6 @@
 package com.example.hashwaney.zhbj33.fragment;
 
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.hashwaney.zhbj33.base.BaseFragment;
@@ -13,11 +14,7 @@ public class GovaffairsFragment
         extends BaseFragment implements OnLoadDataOperator
 {
 
-    @Override
-    public void setContent() {
-        TextView textView = (TextView) getView();
-        textView.setText("政务");
-    }
+
 
     @Override
     public void onLoadNewData(String url) {
@@ -27,5 +24,19 @@ public class GovaffairsFragment
     @Override
     public void onLoadMoreData(String url) {
 
+    }
+
+    @Override
+    public void initTitle() {
+        setIbMenu(false);
+        setTitle("政务");
+        setIbPic(true);
+    }
+
+    @Override
+    public View initContent() {
+        TextView tv =new TextView(getContext());
+        tv.setText("我是政务界面");
+        return tv;
     }
 }
