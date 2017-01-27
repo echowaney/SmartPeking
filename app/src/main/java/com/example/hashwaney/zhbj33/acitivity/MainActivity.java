@@ -137,8 +137,9 @@ public class MainActivity
 //        有些就不需要 ,只要是联网接口的实现类,就可以进行联网操作
         BaseFragment fragment = (BaseFragment) mFragmentList.get(itemid);
         if (fragment instanceof OnLoadDataOperator){
-            ((OnLoadDataOperator)fragment).onLoadMoreData(url);
-            ((OnLoadDataOperator)fragment).onLoadNewData(url);
+            //去网络加载数据
+            ((OnLoadDataOperator)fragment).onLoadNetData();
+
 
         }
 

@@ -16,15 +16,7 @@ public class GovaffairsFragment
 
 
 
-    @Override
-    public void onLoadNewData(String url) {
 
-    }
-
-    @Override
-    public void onLoadMoreData(String url) {
-
-    }
 
     @Override
     public void initTitle() {
@@ -38,5 +30,10 @@ public class GovaffairsFragment
         TextView tv =new TextView(getContext());
         tv.setText("我是政务界面");
         return tv;
+    }
+
+    @Override
+    public void onLoadNetData() {
+
     }
 }

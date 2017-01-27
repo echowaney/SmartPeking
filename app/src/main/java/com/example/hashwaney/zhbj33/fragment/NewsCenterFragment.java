@@ -13,15 +13,6 @@ import com.example.hashwaney.zhbj33.base.OnLoadDataOperator;
 public class NewsCenterFragment
         extends BaseFragment implements OnLoadDataOperator
 {
-    @Override
-    public void onLoadNewData(String url) {
-
-    }
-
-    @Override
-    public void onLoadMoreData(String url) {
-
-    }
 
     @Override
     public void initTitle() {
@@ -35,5 +26,10 @@ public class NewsCenterFragment
         TextView tv =new TextView(getContext());
         tv.setText("我是新闻中心界面");
         return tv;
+    }
+
+    @Override
+    public void onLoadNetData() {
+
     }
 }

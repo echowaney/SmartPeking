@@ -15,15 +15,6 @@ public class SmartServiceFragment
 {
 
 
-    @Override
-    public void onLoadNewData(String url) {
-
-    }
-
-    @Override
-    public void onLoadMoreData(String url) {
-
-    }
 
     @Override
     public void initTitle() {
@@ -38,5 +29,10 @@ public class SmartServiceFragment
         TextView tv =new TextView(getContext());
         tv.setText("我是生活界面");
         return tv;
+    }
+
+    @Override
+    public void onLoadNetData() {
+
     }
 }
