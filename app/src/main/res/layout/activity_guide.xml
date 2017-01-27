@@ -21,4 +21,25 @@
         android:background="@drawable/btn_start_selector"
         />
 
+
+    <RelativeLayout
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/point_container"
+            ></LinearLayout>
+        <View
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:id="@+id/iv_red_point"
+            android:background="@drawable/point_red_shape"
+            />
+    </RelativeLayout>
+
 </RelativeLayout>

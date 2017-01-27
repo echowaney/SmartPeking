@@ -2,11 +2,14 @@ package com.example.hashwaney.zhbj33.acitivity;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.adapter.GuideAdapter;
@@ -23,14 +26,23 @@ public class GuideActivity
         extends BaseActivity
         implements ViewPager.OnPageChangeListener
 {
+    private static final String TAGG = "GuideActivity";
     @BindView(R.id.btn_start)
-    Button mBtnStart;
+    Button       mBtnStart;
+    @BindView(R.id.point_container)
+    LinearLayout mPointContainer;
+    @BindView(R.id.iv_red_point)
+    View         mIvRedPoint;
+
     //准备资源视图
     private int[] Images = {R.drawable.guide_1,
                             R.drawable.guide_2,
                             R.drawable.guide_3
 
     };
+
+
+    //viewpager的页面的集合
     private List<ImageView> mImageViewList;
 
     @BindView(R.id.gudieViepager)
@@ -50,6 +62,32 @@ public class GuideActivity
         ButterKnife.bind(this);
 
         initViewPager();
+        initPoint();
+    }
+
+    //动态添加小圆点
+    private void initPoint() {
+        //        mPointLists =new ArrayList<>();
+/*
+
+        for (int i = 0; i < Images.length; i++) {
+            View view = new View(this);
+            view.setBackgroundResource(R.drawable.point_gray_shape);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(10, 10);
+            params.rightMargin = 10;
+            mPointContainer.addView(view, params);
+        }
+*/
+        for (int image : Images) {
+            View view =new View(this);
+            view.setBackgroundResource(R.drawable.point_gray_shape);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(10,10);
+            params.rightMargin = 20;//设置右边距
+            mPointContainer.addView(view,params);
+        }
+
+
+
     }
 
     //初始化viewpager
@@ -66,9 +104,30 @@ public class GuideActivity
         mGudieViepager.setAdapter(guideAdapter);
         mGudieViepager.addOnPageChangeListener(this);
     }
+    private int width;
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        //在页面滚动的时候,让红色小圆点随着页面一起滚动
+
+        //如果是角标为0,那么就覆盖在第一个小灰点上
+        if (width==0){
+            //就可以拿到第一个孩子和第二个孩子的间距
+            width = mPointContainer.getChildAt(1)
+                                   .getLeft() - mPointContainer.getChildAt(0)
+                                                               .getLeft();
+            Log.d(TAGG, "onPageScrolled:  width"+width);
+
+        }
+
+        //计算出两个点之间的距离,是不是就可以得到偏移量
+        //计算两点之间的距离
+
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mIvRedPoint.getLayoutParams();
+        params.leftMargin=(int) (width*positionOffset + width*position);
+        mIvRedPoint.setLayoutParams(params);
+
 
     }
 
@@ -90,5 +149,9 @@ public class GuideActivity
     }
 
     @OnClick(R.id.btn_start)
-    public void onClick() {}
+    public void onClick() {
+
+
+
+    }
 }
