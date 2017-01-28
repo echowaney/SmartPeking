@@ -1,11 +1,14 @@
 package com.example.hashwaney.zhbj33.fragment;
 
+import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.acitivity.MainActivity;
@@ -40,6 +43,7 @@ public class NewsCenterFragment
     private TabPageIndicator                 mTabPageIndicator;
     private List<NewsCenterBean.NewsTabBean> mNewsTabBeanList =new ArrayList<>();
     private List<NewsCenterBean.NewsMenuBean> mNewsMenuBeen;
+    private List<View>  mViewList;
 
     @Override
     public void initTitle() {
@@ -65,11 +69,21 @@ public class NewsCenterFragment
 
     private void initViewpager() {
         List<NewsCenterBean.NewsTabBean> children = mNewsMenuBeen.get(0).children;
+        //创建一个集合
+        mViewList =new ArrayList<>();
+        for (NewsCenterBean.NewsTabBean newsTabBean : children) {
+            TextView tv =new TextView(getContext());
+            tv.setText(newsTabBean.title);
+            tv.setTextColor(Color.RED);
+            tv.setTextSize(20);
+            tv.setGravity(Gravity.CENTER);
+            mViewList.add(tv);
+        }
         mNewsTabBeanList.clear();
         mNewsTabBeanList.addAll(children);
 
         //        viewpager去设置adapter
-        NewsContentAdapter adapter = new NewsContentAdapter(mNewsTabBeanList);
+        NewsContentAdapter adapter = new NewsContentAdapter(mViewList,mNewsTabBeanList);
 
         mViewpagerNewContent.setAdapter(adapter);
         mTabPageIndicator.setViewPager(mViewpagerNewContent);

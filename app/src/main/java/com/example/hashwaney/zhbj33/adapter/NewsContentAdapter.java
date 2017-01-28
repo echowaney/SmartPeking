@@ -17,27 +17,40 @@ public class NewsContentAdapter
 {
     //这是有指示器的adapter
     private List<NewsCenterBean.NewsTabBean> mNewsTabBeanList;
+    private List<View>                       mViews;
 
-    public NewsContentAdapter(List<NewsCenterBean.NewsTabBean> newsTabBeenList) {mNewsTabBeanList = newsTabBeenList;}
+
+    public NewsContentAdapter(List<View> mViews,
+                              List<NewsCenterBean.NewsTabBean> newsTabBeenList)
+    {
+        this.mViews=mViews;
+        mNewsTabBeanList = newsTabBeenList;
+    }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        return super.instantiateItem(container, position);
+        View view = mViews.get(position);
+        container.addView(view);
+        return view;
+
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        super.destroyItem(container, position, object);
+        container.removeView((View) object);
+
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return mViews != null
+               ? mViews.size()
+               : 0;
     }
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return false;
+        return view == object;
     }
     //将指示器的标题显示
 
