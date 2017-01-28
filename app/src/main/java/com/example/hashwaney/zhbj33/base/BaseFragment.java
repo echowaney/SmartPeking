@@ -41,6 +41,8 @@ public abstract class BaseFragment
                              @Nullable Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_tab_base, container, false);
+
+
         ButterKnife.bind(this, view);
         return view;
 
@@ -52,6 +54,15 @@ public abstract class BaseFragment
 
     //初始化内容
     public abstract  View initContent();
+    //添加内容
+    public void addView(View view){
+
+        //清空容器
+        mFlContainer.removeAllViews();
+        //将内容添加到容器中
+        mFlContainer.addView(view);
+    }
+
 
     //设置标题
     public void setTitle(String title){
@@ -77,16 +88,13 @@ public abstract class BaseFragment
         super.onViewCreated(view, savedInstanceState);
         //setContent();
         initTitle();
-        //清空容器
-        mFlContainer.removeAllViews();
-        //将内容添加到容器中
-        mFlContainer.addView(initContent());
 
 
     }
 
     //将不同的交由子类去实现
 //    public abstract void setContent();
+
 
 
     @OnClick(R.id.ib_menu)
