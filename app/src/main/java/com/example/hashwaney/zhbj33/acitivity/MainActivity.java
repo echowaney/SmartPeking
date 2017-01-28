@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.RadioButton;
@@ -109,11 +110,18 @@ public class MainActivity
     }
     //初始化slidingmenu的菜单
     private void initMenuAdapter() {
-        //mNewsMenuBeenLists.clear();
+//        mNewsMenuBeenLists.clear();
+
+//        setNewsMenuBeenLists( ); 这样做是不行的,,这样做并没有将集合传递过来,就是一个空集合
+
 
       //  Log.d("result", "initMenuAdapter:  mNewsMenuBeenLists "+mNewsMenuBeenLists.toString());
        // mAdapter = new MenuAdapter(null);
         //mRecycleview.setAdapter(mAdapter);
+        mMenuAdapter =new MenuAdapter(this,null);
+        mRecycleview.setLayoutManager(new LinearLayoutManager(this));
+        mRecycleview.setAdapter(mMenuAdapter);
+
 
 
 
