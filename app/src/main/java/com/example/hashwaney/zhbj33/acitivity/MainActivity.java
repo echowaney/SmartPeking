@@ -1,15 +1,17 @@
 package com.example.hashwaney.zhbj33.acitivity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.adapter.MainAdapter;
+import com.example.hashwaney.zhbj33.adapter.MenuAdapter;
 import com.example.hashwaney.zhbj33.base.BaseFragment;
 import com.example.hashwaney.zhbj33.base.OnLoadDataOperator;
 import com.example.hashwaney.zhbj33.bean.NewsCenterBean;
@@ -36,7 +38,7 @@ public class MainActivity
         implements RadioGroup.OnCheckedChangeListener, ViewPager.OnPageChangeListener
 {
     private List<Fragment> mFragmentList;
-
+    private List<NewsCenterBean.NewsMenuBean> mNewsMenuBeenLists =new ArrayList<>() ;
 
     @BindView(R.id.viewpager)
     ViewPager   mViewpager;
@@ -54,6 +56,8 @@ public class MainActivity
     RadioGroup  mRg;
     public SlidingMenu mSlidingMenu;
     private String url;
+    private RecyclerView mRecycleview;
+    private MenuAdapter mMenuAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,22 +67,53 @@ public class MainActivity
         ButterKnife.bind(this);
         initViewPager();
         initSlidingMenu();
+        initMenuAdapter();
         //一上来默认选中首页
-        mViewpager.setCurrentItem(0);
-        mRbHome.setChecked(true);
+//        mViewpager.setCurrentItem(0);
+//        mRbHome.setChecked(true);
         mRg.setOnCheckedChangeListener(this);
 
 
     }
+
+    //定义一个方法去接收来自NewsCenterFragment的数据
+
+    public void  setNewsMenuBeenLists(List<NewsCenterBean.NewsMenuBean> newsMenuBeenLists){
+        mNewsMenuBeenLists.clear();
+//        mNewsMenuBeenLists =newsMenuBeenLists;
+        mNewsMenuBeenLists.addAll(newsMenuBeenLists);
+        Log.d("result", "initMenuAdapter:  mNewsMenuBeenLists "+mNewsMenuBeenLists.size());
+        //数据是请求到了，但是需要将数据传递给menuAdapter -- 那么就应该去adapter中定义一个方法用来接收从activity中传过来的数据
+        //在将数据传递到adapter中
+       // mAdapter.setNewsMenuBeenLists(mNewsMenuBeenLists);
+        mMenuAdapter.setMenuBeanLists(mNewsMenuBeenLists);
+
+
+
+    }
+
+
     //初始化侧滑菜单
     private void initSlidingMenu() {
         mSlidingMenu = new SlidingMenu(this);
         mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_NONE);
         mSlidingMenu.setMode(LEFT);
         mSlidingMenu.setBehindWidth(250);
-        mSlidingMenu.setBackgroundColor(Color.RED);
         mSlidingMenu.setMenu(R.layout.activity_main_menu);
         mSlidingMenu.attachToActivity(this, SLIDING_CONTENT);
+
+        mRecycleview = (RecyclerView) mSlidingMenu.findViewById(R.id.recycleview);
+
+
+
+    }
+    //初始化slidingmenu的菜单
+    private void initMenuAdapter() {
+        //mNewsMenuBeenLists.clear();
+
+      //  Log.d("result", "initMenuAdapter:  mNewsMenuBeenLists "+mNewsMenuBeenLists.toString());
+       // mAdapter = new MenuAdapter(null);
+        //mRecycleview.setAdapter(mAdapter);
 
 
 
@@ -92,7 +127,7 @@ public class MainActivity
         mFragmentList.add(new SmartServiceFragment());
         mFragmentList.add(new GovaffairsFragment());
         mFragmentList.add(new SettingFragment());
-        MainAdapter adapter =new MainAdapter(getSupportFragmentManager(),mFragmentList);
+        MainAdapter adapter = new MainAdapter(getSupportFragmentManager(),mFragmentList);
         mViewpager.setAdapter(adapter);
         mViewpager.addOnPageChangeListener(this);
 
@@ -180,11 +215,6 @@ public class MainActivity
     }
 
 
-    //定义一个方法去接收来自NewsCenterFragment的数据
-    private List<NewsCenterBean.NewsMenuBean> mNewsMenuBeenLists;
-    public void  setNewsMenuBeenLists(List<NewsCenterBean.NewsMenuBean> newsMenuBeenLists){
-        mNewsMenuBeenLists =newsMenuBeenLists;
 
-    }
 
 }
