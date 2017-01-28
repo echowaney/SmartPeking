@@ -44,6 +44,7 @@ public class NewsCenterFragment
     private List<NewsCenterBean.NewsTabBean> mNewsTabBeanList =new ArrayList<>();
     private List<NewsCenterBean.NewsMenuBean> mNewsMenuBeen;
     private List<View>  mViewList;
+    private List<NewsCenterBean.NewsTabBean> mNewsTabBeen;
 
     @Override
     public void initTitle() {
@@ -60,7 +61,20 @@ public class NewsCenterFragment
         View view = LayoutInflater.from(getContext())
                                   .inflate(R.layout.news_tab_content, (ViewGroup) getView(), false);
         mViewpagerNewContent = (ViewPager) view.findViewById(R.id.viewpager);
+        //给imagebutton设置点击监听事件
         mIbNext = (ImageButton) view.findViewById(R.id.iv_next);
+            mIbNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int currentItem = mViewpagerNewContent.getCurrentItem();
+                    if (currentItem !=mNewsTabBeen.size()-1){
+                        currentItem+=1;
+                        mViewpagerNewContent.setCurrentItem(currentItem);
+                    }
+                }
+            });
+
+
         mTabPageIndicator = (TabPageIndicator) view.findViewById(R.id.tab_pageindicator);
         initViewpager();
         return view;
@@ -68,10 +82,10 @@ public class NewsCenterFragment
     }
 
     private void initViewpager() {
-        List<NewsCenterBean.NewsTabBean> children = mNewsMenuBeen.get(0).children;
+        mNewsTabBeen = mNewsMenuBeen.get(0).children;
         //创建一个集合
         mViewList =new ArrayList<>();
-        for (NewsCenterBean.NewsTabBean newsTabBean : children) {
+        for (NewsCenterBean.NewsTabBean newsTabBean : mNewsTabBeen) {
             TextView tv =new TextView(getContext());
             tv.setText(newsTabBean.title);
             tv.setTextColor(Color.RED);
@@ -80,7 +94,7 @@ public class NewsCenterFragment
             mViewList.add(tv);
         }
         mNewsTabBeanList.clear();
-        mNewsTabBeanList.addAll(children);
+        mNewsTabBeanList.addAll(mNewsTabBeen);
 
         //        viewpager去设置adapter
         NewsContentAdapter adapter = new NewsContentAdapter(mViewList,mNewsTabBeanList);
