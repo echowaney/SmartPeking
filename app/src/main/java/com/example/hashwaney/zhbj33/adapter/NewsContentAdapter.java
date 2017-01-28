@@ -1,11 +1,13 @@
 package com.example.hashwaney.zhbj33.adapter;
 
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.hashwaney.zhbj33.base.NewsCenterTabPager;
 import com.example.hashwaney.zhbj33.bean.NewsCenterBean;
+import com.example.hashwaney.zhbj33.constant.Contant;
 
 import java.util.List;
 
@@ -32,6 +34,15 @@ public class NewsContentAdapter
     public Object instantiateItem(ViewGroup container, int position) {
         View view = mViews.get(position).mView;
         container.addView(view);
+        //获取到newsContentTabpager实例
+        NewsCenterTabPager newsCenterTabPager = mViews.get(position);
+        String             url1               = mNewsTabBeanList.get(position).url;
+        String url = Contant.REQUEST_DATA_HOST_URL+url1;
+//        Log.e("aaaa", "instantiateItem: "+url1  );
+
+        newsCenterTabPager.loadDataFormNet(url);
+
+
         return view;
 
     }
@@ -57,6 +68,7 @@ public class NewsContentAdapter
 
     @Override
     public CharSequence getPageTitle(int position) {
+        Log.e("bbbbb", "getPageTitle: "+ mNewsTabBeanList.get(position).title);
         return mNewsTabBeanList.get(position).title;
     }
 }
