@@ -36,13 +36,14 @@ public class NewsCenterFragment
 {
 
     private static final String TA = "NewsCenterFragment";
-    private ViewPager                        mViewpagerNewContent;
-    private ImageButton                      mIbNext;
-    private TabPageIndicator                 mTabPageIndicator;
+    private ViewPager mViewpagerNewContent;
+    private ImageButton              mIbNext;
+    private TabPageIndicator         mTabPageIndicator;
     private List<NewsCenterBean.NewsTabBean> mNewsTabBeanList =new ArrayList<>();
     private List<NewsCenterBean.NewsMenuBean> mNewsMenuBeen;
     private List<NewsCenterTabPager>  mViewList;
     private List<NewsCenterBean.NewsTabBean> mNewsTabBeen;
+    private NewsCenterTabPager mNewsCenterTabPager;
 
     @Override
     public void initTitle() {
@@ -84,8 +85,9 @@ public class NewsCenterFragment
         //创建一个集合
         mViewList =new ArrayList<>();
         for (NewsCenterBean.NewsTabBean newsTabBean : mNewsTabBeen) {
-            NewsCenterTabPager mNewsCenterTabPager =new NewsCenterTabPager(getContext());
+            mNewsCenterTabPager = new NewsCenterTabPager(getContext());
             mViewList.add(mNewsCenterTabPager);
+
         }
         mNewsTabBeanList.clear();
         mNewsTabBeanList.addAll(mNewsTabBeen);
@@ -99,6 +101,7 @@ public class NewsCenterFragment
         mViewList.get(0).startSwitch();
         //对指示器进行监听 ，让其他页面也进行轮播
         mTabPageIndicator.setOnPageChangeListener(this);
+
     }
 
     @Override

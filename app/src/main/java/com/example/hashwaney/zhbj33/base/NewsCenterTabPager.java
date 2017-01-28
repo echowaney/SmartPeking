@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.adapter.SwitchImageAdapter;
 import com.example.hashwaney.zhbj33.bean.NewCenterTabBean;
+import com.example.hashwaney.zhbj33.view.ImageViewSwitchViewpager;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -38,13 +39,13 @@ public class NewsCenterTabPager
 {
     private final static String TAG = "NewsCenterTabPager";
     @BindView(R.id.viewpager)
-    ViewPager    mViewpager;
+    ImageViewSwitchViewpager mViewpager;
     @BindView(R.id.ll_poitn_container)
-    LinearLayout mLlPoitnContainer;
+    LinearLayout             mLlPoitnContainer;
     @BindView(R.id.recycleview)
-    RecyclerView mRecycleview;
+    RecyclerView             mRecycleview;
     @BindView(R.id.tv_title)
-    TextView     mTextView;
+    TextView                 mTextView;
     private Context mContext;
     public  View    mView;// 提取这个view是为了方便外面可以调用这个成员变量
 
@@ -131,6 +132,9 @@ public class NewsCenterTabPager
         initPageTitle();
         initPoint();
 //        startSwitch();
+
+        //将当前对象传递给imageviewswitchviewpager
+        mViewpager.setTabPager(this);
 
 
     }
