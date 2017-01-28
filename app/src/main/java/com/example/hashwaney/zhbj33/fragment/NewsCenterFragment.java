@@ -32,7 +32,7 @@ public class NewsCenterFragment
     public void initTitle() {
         setIbMenu(true);
         setIbPic(false);
-        setTitle("新闻中心");
+        setTitle("新闻");
     }
 
     @Override

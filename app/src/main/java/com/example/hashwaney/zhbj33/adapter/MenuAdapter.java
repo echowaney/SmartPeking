@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.hashwaney.zhbj33.R;
@@ -22,17 +23,17 @@ public class MenuAdapter
         extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder>
 {
     private List<NewsCenterBean.NewsMenuBean> mNewsMenuBeenLists;
-    private int checkPosition;
-    private Context mContext;
+    private int                               checkPosition;
+    private Context                           mContext;
 
-    public MenuAdapter(Context context ,List<NewsCenterBean.NewsMenuBean> newsMenuBeenLists) {
+    public MenuAdapter(Context context, List<NewsCenterBean.NewsMenuBean> newsMenuBeenLists) {
         this.mNewsMenuBeenLists = newsMenuBeenLists;
-        this.mContext=context;
+        this.mContext = context;
     }
 
     //用来接收从activity中传过来的数据
     public void setMenuBeanLists(List<NewsCenterBean.NewsMenuBean> newsMenuBeenLists) {
-        mNewsMenuBeenLists =newsMenuBeenLists;
+        mNewsMenuBeenLists = newsMenuBeenLists;
         notifyDataSetChanged();
 
     }
@@ -42,32 +43,32 @@ public class MenuAdapter
     public MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                                     .inflate(R.layout.slidingmenu_item, parent, false);
-        MenuViewHolder holder =new MenuViewHolder(view);
+                                  .inflate(R.layout.slidingmenu_item, parent, false);
+        MenuViewHolder holder = new MenuViewHolder(view);
         return holder;
 
     }
 
     @Override
     public void onBindViewHolder(final MenuViewHolder holder, final int position) {
-        NewsCenterBean.NewsMenuBean newsMenuBean = mNewsMenuBeenLists.get(position);
-        String                      title        = newsMenuBean.title;
+        final NewsCenterBean.NewsMenuBean newsMenuBean = mNewsMenuBeenLists.get(position);
+        String                            title        = newsMenuBean.title;
         holder.mTvMenuTitle.setText(title);
-//        if (checkPosition==position){
-//            holder.mTvMenuTitle.setPressed(true);
-//
-//        }else {
-//
-//
-////        }
-//        if (checkPosition==position){
-//            holder.mTvMenuTitle.setTextColor(Color.RED);
-//
-//        }else {
-//             holder.mTvMenuTitle.setTextColor(Color.WHITE);
-//        }
-//
+        //        if (checkPosition==position){
+        //            holder.mTvMenuTitle.setPressed(true);
+        //
+        //        }else {
+        //
 
+        //    }
+        if (checkPosition == position) {
+            holder.mTvMenuTitle.setTextColor(Color.RED);
+            holder.mIvArr.setImageResource(R.drawable.menu_arr_select);
+
+        } else {
+            holder.mTvMenuTitle.setTextColor(Color.WHITE);
+            holder.mIvArr.setImageResource(R.drawable.menu_arr_normal);
+        }
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -80,27 +81,38 @@ public class MenuAdapter
                  * 2.关闭 侧滑 ---Slidingmenu
                  *
                  */
-//                if (checkPosition !=position){
-//                    checkPosition =position;
-//                    //notifyDataSetChanged();
-//                }
-//
-                notifyDataSetChanged();
-              if (checkPosition == position){
-//                  holder.mTvMenuTitle.setPressed(true);
-                  holder.mTvMenuTitle.setTextColor(Color.RED);
-                  //这样做其实也是不行的,只能选中第一个
+                if (checkPosition != position) {
+                    checkPosition = position;
+                    //刷新界面 ,因为界面有发生变化,字体颜色改变了
+                    notifyDataSetChanged();
+
+                    //点击条目.切换fragment的标题
+                    /**
+                     * 1. 首先获取到newsenterfragment的实例 -- MainActivity
+                     *
+                     * 2. 通过实例对象上的setTitle 方法来设置标题
+                     */
+
+                   ((MainActivity) mContext).getCurrentFragment().setTitle(newsMenuBean.title);
+
+                }
+
+                //                notifyDataSetChanged();
+                //              if (checkPosition == position){
+                ////                  holder.mTvMenuTitle.setPressed(true);
+                //                  holder.mTvMenuTitle.setTextColor(Color.RED);
+                //                  //这样做其实也是不行的,只能选中第一个
 
 
-              }else{
-//                  holder.mTvMenuTitle.setPressed(false);
-                  holder.mTvMenuTitle.setTextColor(Color.WHITE);
-                  checkPosition =position;
+                //              }else{
+                ////                  holder.mTvMenuTitle.setPressed(false);
+                //                  holder.mTvMenuTitle.setTextColor(Color.WHITE);
+                //                  checkPosition =position;
 
-              }
+                //              }
 
-
-                ((MainActivity)mContext).mSlidingMenu.toggle();
+                //关闭菜单
+                ((MainActivity) mContext).mSlidingMenu.toggle();
             }
         });
 
@@ -108,16 +120,22 @@ public class MenuAdapter
 
     @Override
     public int getItemCount() {
-        return mNewsMenuBeenLists==null?0:mNewsMenuBeenLists.size();
+        return mNewsMenuBeenLists == null
+               ? 0
+               : mNewsMenuBeenLists.size();
     }
 
-    class MenuViewHolder extends RecyclerView.ViewHolder{
+    class MenuViewHolder
+            extends RecyclerView.ViewHolder
+    {
 
-     TextView mTvMenuTitle;
+        TextView  mTvMenuTitle;
+        ImageView mIvArr;
 
         public MenuViewHolder(View itemView) {
             super(itemView);
             mTvMenuTitle = (TextView) itemView.findViewById(R.id.tv_menu_title);
+            mIvArr = (ImageView) itemView.findViewById(R.id.iv_menu_arr);
         }
     }
 

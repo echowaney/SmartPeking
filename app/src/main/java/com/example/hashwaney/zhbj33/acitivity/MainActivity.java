@@ -2,8 +2,8 @@ package com.example.hashwaney.zhbj33.acitivity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,7 +35,7 @@ import static com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.TOUCHMODE_FULLSCRE
 import static com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.TOUCHMODE_NONE;
 
 public class MainActivity
-        extends AppCompatActivity
+        extends FragmentActivity
         implements RadioGroup.OnCheckedChangeListener, ViewPager.OnPageChangeListener
 {
     private List<Fragment> mFragmentList;
@@ -222,6 +222,13 @@ public class MainActivity
 
     }
 
+
+    //获取对应的fragment的实例对象
+    public BaseFragment getCurrentFragment(){
+        int currentItem = mViewpager.getCurrentItem();
+        BaseFragment fragment = (BaseFragment) mFragmentList.get(currentItem);
+        return fragment;
+    }
 
 
 
