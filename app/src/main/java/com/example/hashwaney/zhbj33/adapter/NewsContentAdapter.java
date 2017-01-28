@@ -4,6 +4,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.hashwaney.zhbj33.base.NewsCenterTabPager;
 import com.example.hashwaney.zhbj33.bean.NewsCenterBean;
 
 import java.util.List;
@@ -17,10 +18,10 @@ public class NewsContentAdapter
 {
     //这是有指示器的adapter
     private List<NewsCenterBean.NewsTabBean> mNewsTabBeanList;
-    private List<View>                       mViews;
+    private List<NewsCenterTabPager>                       mViews;
 
 
-    public NewsContentAdapter(List<View> mViews,
+    public NewsContentAdapter(List<NewsCenterTabPager> mViews,
                               List<NewsCenterBean.NewsTabBean> newsTabBeenList)
     {
         this.mViews=mViews;
@@ -29,7 +30,7 @@ public class NewsContentAdapter
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        View view = mViews.get(position);
+        View view = mViews.get(position).mView;
         container.addView(view);
         return view;
 

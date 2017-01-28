@@ -1,19 +1,17 @@
 package com.example.hashwaney.zhbj33.fragment;
 
-import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.acitivity.MainActivity;
 import com.example.hashwaney.zhbj33.adapter.NewsContentAdapter;
 import com.example.hashwaney.zhbj33.base.BaseFragment;
+import com.example.hashwaney.zhbj33.base.NewsCenterTabPager;
 import com.example.hashwaney.zhbj33.base.OnLoadDataOperator;
 import com.example.hashwaney.zhbj33.bean.NewsCenterBean;
 import com.example.hashwaney.zhbj33.constant.Contant;
@@ -43,7 +41,7 @@ public class NewsCenterFragment
     private TabPageIndicator                 mTabPageIndicator;
     private List<NewsCenterBean.NewsTabBean> mNewsTabBeanList =new ArrayList<>();
     private List<NewsCenterBean.NewsMenuBean> mNewsMenuBeen;
-    private List<View>  mViewList;
+    private List<NewsCenterTabPager>  mViewList;
     private List<NewsCenterBean.NewsTabBean> mNewsTabBeen;
 
     @Override
@@ -86,11 +84,7 @@ public class NewsCenterFragment
         //创建一个集合
         mViewList =new ArrayList<>();
         for (NewsCenterBean.NewsTabBean newsTabBean : mNewsTabBeen) {
-            TextView tv =new TextView(getContext());
-            tv.setText(newsTabBean.title);
-            tv.setTextColor(Color.RED);
-            tv.setTextSize(20);
-            tv.setGravity(Gravity.CENTER);
+            NewsCenterTabPager tv =new NewsCenterTabPager(getContext());
             mViewList.add(tv);
         }
         mNewsTabBeanList.clear();
