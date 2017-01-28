@@ -1,6 +1,7 @@
 package com.example.hashwaney.zhbj33.base;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -50,6 +51,36 @@ public class NewsCenterTabPager
     private List<ImageView>                    mImageViewList;
     private List<NewCenterTabBean.NewsTopBean> mTopnews;
 
+    private Handler mHandler =new Handler();
+    private NewCenterTabBean mNewCenterTabBean;
+
+
+    //开始轮播
+    public  void  startSwitch(){
+        //延时两秒进行
+        mHandler.postDelayed(new SwitchTask(),2000);
+    }
+    //结束轮播
+    public void stopSwitch(){
+        mHandler.removeCallbacksAndMessages(null);
+    }
+
+    //进行无限轮播的任务----处理轮播的逻辑为什么要放在run方法中
+    class SwitchTask implements  Runnable{
+
+        @Override
+        public void run() {
+            //处理轮播的逻辑
+            int currentItem = mViewpager.getCurrentItem();
+            if (currentItem==mNewCenterTabBean.data.topnews.size()-1){
+                currentItem =0;
+            }else {
+                currentItem++;
+            }
+            mViewpager.setCurrentItem(currentItem);
+            mHandler.postDelayed(this,2000);
+        }
+    }
     public NewsCenterTabPager(Context context) {
         mContext = context;
         //加载一个视图
@@ -92,13 +123,14 @@ public class NewsCenterTabPager
     private void processData(String response) {
         //解析数据
         Gson             gson             = new Gson();
-        NewCenterTabBean newCenterTabBean = gson.fromJson(response, NewCenterTabBean.class);
-        mTopnews = newCenterTabBean.data.topnews;
+        mNewCenterTabBean = gson.fromJson(response, NewCenterTabBean.class);
+        mTopnews = mNewCenterTabBean.data.topnews;
         //初始化轮播图
         initSwitchPage();
         //初始化标题
         initPageTitle();
         initPoint();
+//        startSwitch();
 
 
     }
@@ -184,4 +216,6 @@ public class NewsCenterTabPager
     public void onPageScrollStateChanged(int state) {
 
     }
+
+
 }

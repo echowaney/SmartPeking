@@ -32,7 +32,7 @@ import okhttp3.Call;
 
 public class NewsCenterFragment
         extends BaseFragment
-        implements OnLoadDataOperator
+        implements OnLoadDataOperator, ViewPager.OnPageChangeListener
 {
 
     private static final String TA = "NewsCenterFragment";
@@ -84,8 +84,8 @@ public class NewsCenterFragment
         //创建一个集合
         mViewList =new ArrayList<>();
         for (NewsCenterBean.NewsTabBean newsTabBean : mNewsTabBeen) {
-            NewsCenterTabPager tv =new NewsCenterTabPager(getContext());
-            mViewList.add(tv);
+            NewsCenterTabPager mNewsCenterTabPager =new NewsCenterTabPager(getContext());
+            mViewList.add(mNewsCenterTabPager);
         }
         mNewsTabBeanList.clear();
         mNewsTabBeanList.addAll(mNewsTabBeen);
@@ -95,7 +95,10 @@ public class NewsCenterFragment
 
         mViewpagerNewContent.setAdapter(adapter);
         mTabPageIndicator.setViewPager(mViewpagerNewContent);
-
+        //一上来让第一个页面进行轮播
+        mViewList.get(0).startSwitch();
+        //对指示器进行监听 ，让其他页面也进行轮播
+        mTabPageIndicator.setOnPageChangeListener(this);
     }
 
     @Override
@@ -139,6 +142,38 @@ public class NewsCenterFragment
         //加载布局
         addView(view);
 
+
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        //页面被选中，进行无限轮播
+        //未被选中 ，就停止轮播
+        for (int i = 0; i <mViewList.size() ; i++) {
+            NewsCenterTabPager newsCenterTabPager = mViewList.get(i);
+            //开启轮播
+            if (i==position){
+                newsCenterTabPager.startSwitch();
+
+            }else {
+                //停止轮播
+                newsCenterTabPager.stopSwitch();
+
+            }
+        }
+
+
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
 
     }
 }
