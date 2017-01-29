@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,7 @@ import com.example.hashwaney.zhbj33.adapter.RecycleViewNewsListAdapter;
 import com.example.hashwaney.zhbj33.adapter.SwitchImageAdapter;
 import com.example.hashwaney.zhbj33.bean.NewCenterTabBean;
 import com.example.hashwaney.zhbj33.utils.RecycleViewDivider;
+import com.example.hashwaney.zhbj33.view.CostumeRecycleview;
 import com.example.hashwaney.zhbj33.view.ImageViewSwitchViewpager;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -47,7 +47,7 @@ public class NewsCenterTabPager
     @BindView(R.id.ll_poitn_container)
     LinearLayout             mLlPoitnContainer;
     @BindView(R.id.recycleview)
-    RecyclerView             mRecycleview;
+    CostumeRecycleview       mRecycleview;
     @BindView(R.id.tv_title)
     TextView                 mTextView;
     private Context mContext;
