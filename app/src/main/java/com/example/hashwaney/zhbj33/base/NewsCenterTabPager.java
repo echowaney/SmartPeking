@@ -3,6 +3,7 @@ package com.example.hashwaney.zhbj33.base;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.hashwaney.zhbj33.R;
+import com.example.hashwaney.zhbj33.adapter.RecycleViewNewsListAdapter;
 import com.example.hashwaney.zhbj33.adapter.SwitchImageAdapter;
 import com.example.hashwaney.zhbj33.bean.NewCenterTabBean;
+import com.example.hashwaney.zhbj33.utils.RecycleViewDivider;
 import com.example.hashwaney.zhbj33.view.ImageViewSwitchViewpager;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -135,10 +138,27 @@ public class NewsCenterTabPager
         //初始化标题
         initPageTitle();
         initPoint();
-        //        startSwitch();
+
+        //初始化recycleview的新闻列表
+
+        initRecycleNews();
+
 
         //将当前对象传递给imageviewswitchviewpager
         mViewpager.setTabPager(this);
+
+
+    }
+    //初始化新闻列表
+    private void initRecycleNews() {
+        mRecycleview.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecycleview.addItemDecoration(new RecycleViewDivider(mContext,LinearLayout.HORIZONTAL));
+//        mRecycleview.setAdapter();
+
+        RecycleViewNewsListAdapter adapter =new RecycleViewNewsListAdapter(mContext,mNewCenterTabBean.data.news);
+        mRecycleview.setAdapter(adapter);
+
+
 
 
     }
