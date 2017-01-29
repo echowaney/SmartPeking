@@ -42,13 +42,13 @@ public class NewsCenterTabPager
         implements ViewPager.OnPageChangeListener
 {
     private final static String TAG = "NewsCenterTabPager";
-    @BindView(R.id.viewpager)
+   // @BindView(R.id.viewpager)
     ImageViewSwitchViewpager mViewpager;
-    @BindView(R.id.ll_poitn_container)
+   // @BindView(R.id.ll_poitn_container)
     LinearLayout             mLlPoitnContainer;
     @BindView(R.id.recycleview)
     CostumeRecycleview       mRecycleview;
-    @BindView(R.id.tv_title)
+   // @BindView(R.id.tv_title)
     TextView                 mTextView;
     private Context mContext;
     public  View    mView;// 提取这个view是为了方便外面可以调用这个成员变量
@@ -101,6 +101,7 @@ public class NewsCenterTabPager
                                   .inflate(R.layout.news_tab_base, null);
         //        ButterKnife.bind(view); 注意要将视图绑定在目标视图不然会找不到相应的试图
         ButterKnife.bind(this, view);
+
         return view;
 
     }
@@ -134,6 +135,8 @@ public class NewsCenterTabPager
         Gson gson = new Gson();
         mNewCenterTabBean = gson.fromJson(response, NewCenterTabBean.class);
         mTopnews = mNewCenterTabBean.data.topnews;
+        //初始化头布局
+        initHeadViewLayout();
         //初始化轮播图
         initSwitchPage();
         //初始化标题
@@ -150,6 +153,22 @@ public class NewsCenterTabPager
 
 
     }
+
+    private void initHeadViewLayout() {
+//        View view =View.inflate(mContext,R.layout.switch_image_view,null);
+        View view = LayoutInflater.from(mContext)
+                                  .inflate(R.layout.switch_image_view, null);
+        mViewpager= (ImageViewSwitchViewpager) view.findViewById(R.id.switchviewpager);
+        mLlPoitnContainer = (LinearLayout) view.findViewById(R.id.ll_poitn_container);
+        mTextView= (TextView) view.findViewById(R.id.tv_title);
+//        view.measure(0,0);
+//        view.getHeight();
+
+        mRecycleview.addSwitchImage(view);
+
+
+    }
+
     //初始化新闻列表
     private void initRecycleNews() {
         mRecycleview.setLayoutManager(new LinearLayoutManager(mContext));
@@ -219,6 +238,7 @@ public class NewsCenterTabPager
             ImageView imageView = new ImageView(mContext);
             String    topimage  = topBean.topimage;
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
             Picasso.with(mContext)
                    .load(topimage)
                    .into(imageView);

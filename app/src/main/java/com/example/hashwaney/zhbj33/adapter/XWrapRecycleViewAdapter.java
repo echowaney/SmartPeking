@@ -31,30 +31,31 @@ public class XWrapRecycleViewAdapter
     public int getItemViewType(int position) {
         if (position == 0) {
             // 说明是头布局
-            return -1;
+            return RecyclerView.INVALID_TYPE;
 
-        } else if (position == mAdapter.getItemCount() + 1) {
-            return -2;
-        }
+     }
+//        else if (position == mAdapter.getItemCount() + 1) {
+//            return -2;
+//        }
         //正常布局
-        //        int adjPosition = position -1;
-        //        int adapterCount = mAdapter.getItemCount();
-        //        if (adjPosition<adapterCount){
-        //
-        //            return mAdapter.getItemViewType(adjPosition);
-        //        }
+                int adjPosition = position -1;
+                int adapterCount = mAdapter.getItemCount();
+                if (adjPosition<adapterCount){
+
+                    return mAdapter.getItemViewType(adjPosition);
+                }
 
 
-        return super.getItemViewType(position);//默认的返回0
+        return RecyclerView.INVALID_TYPE-1;//默认的返回0
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == -1) {
+        if (viewType ==RecyclerView.INVALID_TYPE) {
             //头布局
             return new HeadViewHolder(mHeadView);
 
-        } else if (viewType == -2) {
+        } else if (viewType == RecyclerView.INVALID_TYPE-1) {
             //脚布局
             return new FootViewHolder(mFootView);
         }

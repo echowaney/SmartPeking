@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+            <com.example.hashwaney.zhbj33.view.ImageViewSwitchViewpager
+                android:layout_width="match_parent"
+                android:id="@+id/switchviewpager"
+                android:layout_height="200dp"></com.example.hashwaney.zhbj33.view.ImageViewSwitchViewpager>
+            <RelativeLayout
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:background="#65b3adad"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="标题"
+                    android:textColor="#fff"
+                    android:textSize="20sp"
+                    android:id="@+id/tv_title"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                    <LinearLayout
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:orientation="horizontal"
+                        android:id="@+id/ll_poitn_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                    </LinearLayout>
+            </RelativeLayout>
+</RelativeLayout>

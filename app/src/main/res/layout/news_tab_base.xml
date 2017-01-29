@@ -4,43 +4,6 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp">
-
-        <com.example.hashwaney.zhbj33.view.ImageViewSwitchViewpager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="#b1c2bfbf">
-
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_centerVertical="true"
-                android:text="天空翱翔"
-                android:textColor="#fff"
-                />
-
-            <LinearLayout
-                android:id="@+id/ll_poitn_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal"></LinearLayout>
-
-
-        </RelativeLayout>
-
-    </RelativeLayout>
     <com.example.hashwaney.zhbj33.view.CostumeRecycleview
         android:layout_width="match_parent"
         android:layout_height="match_parent"
