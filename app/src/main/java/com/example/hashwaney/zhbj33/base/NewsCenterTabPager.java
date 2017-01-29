@@ -97,7 +97,7 @@ public class NewsCenterTabPager
 
     }
 
-    //暴露一个方法让外部实现网络加载数据,当页面被点击切换了,就去加载网络数据
+    //暴露一个方法让外部实现网络加载数据,当页面被点击切换了,就去加载网络数据,并且去执行初始化轮播图,小圆点
     public void loadDataFormNet(String url) {
         OkHttpUtils.get()
                    .url(url)
@@ -170,15 +170,36 @@ public class NewsCenterTabPager
 
     private void initSwitchPage() {
         mImageViewList = new ArrayList<>();
-        for (NewCenterTabBean.NewsTopBean topnew : mTopnews) {
+
+        for (int i = -1; i <mTopnews.size()+1; i++) {
+            if (i==-1){
+                i=mTopnews.size()-1;
+
+            }else if (i==mTopnews.size()){
+                i=0;
+            }
+
             ImageView imageView = new ImageView(mContext);
-            String    topimage  = topnew.topimage;
+            String    topimage  = mTopnews.get(i).topimage;
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             Picasso.with(mContext)
                    .load(topimage)
                    .into(imageView);
             mImageViewList.add(imageView);
+
+
+
         }
+
+//        for (NewCenterTabBean.NewsTopBean topnew : mTopnews) {
+//            ImageView imageView = new ImageView(mContext);
+//            String    topimage  = topnew.topimage;
+//            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+//            Picasso.with(mContext)
+//                   .load(topimage)
+//                   .into(imageView);
+//            mImageViewList.add(imageView);
+//        }
         SwitchImageAdapter adapter = new SwitchImageAdapter(mImageViewList);
         mViewpager.setAdapter(adapter);
         mViewpager.addOnPageChangeListener(this);
