@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import com.example.hashwaney.zhbj33.base.NewsCenterTabPager;
+import com.example.hashwaney.zhbj33.utils.ToastUtils;
 
 /**
  * Created by HashWaney on 2017/1/29.
@@ -58,6 +59,15 @@ public class ImageViewSwitchViewpager
             case MotionEvent.ACTION_UP:
                 //弹开时开始轮播
                 tabPager.startSwitch();
+                //处理图片的点击 ,只要按下的坐标和弹出的坐标一致 说明是点了图片
+                float upX =ev.getX();
+                float upY =ev.getY();
+                if (startX == upX && startY ==upY)
+                {
+                    ToastUtils.showToast(getContext(),"点击了");
+
+                }
+
                 break;
         }
         return super.dispatchTouchEvent(ev);
