@@ -1,6 +1,7 @@
 package com.example.hashwaney.zhbj33.base;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -152,7 +153,9 @@ public class NewsCenterTabPager
     //初始化新闻列表
     private void initRecycleNews() {
         mRecycleview.setLayoutManager(new LinearLayoutManager(mContext));
-        mRecycleview.addItemDecoration(new RecycleViewDivider(mContext,LinearLayout.HORIZONTAL));
+        mRecycleview.addItemDecoration(new RecycleViewDivider(mContext, LinearLayout.HORIZONTAL, 1,
+
+                                                              Color.parseColor("#ff0000")));
 //        mRecycleview.setAdapter();
 
         RecycleViewNewsListAdapter adapter =new RecycleViewNewsListAdapter(mContext,mNewCenterTabBean.data.news);
