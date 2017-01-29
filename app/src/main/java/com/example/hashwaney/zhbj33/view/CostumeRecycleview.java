@@ -2,8 +2,11 @@ package com.example.hashwaney.zhbj33.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -24,6 +27,7 @@ public class CostumeRecycleview
         extends RecyclerView
 {
 
+    private static final String TAG = "CostumeRecycleview";
     @BindView(R.id.pb_refresh)
     ProgressBar  mPbRefresh;
     @BindView(R.id.tv_refresh)
@@ -32,14 +36,15 @@ public class CostumeRecycleview
     TextView     mTvTime;
     @BindView(R.id.ll_refresh)
     LinearLayout mLlRefresh;
-//    @BindView(R.id.progress_load_more)
+    //    @BindView(R.id.progress_load_more)
     ProgressBar  mProgressLoadMore;
-//    @BindView(R.id.ll_loadmore)
+    //    @BindView(R.id.ll_loadmore)
     LinearLayout mLlLoadmore;
     private ViewGroup mHeadView;
     private View      mFootView;
     private int       mMHeadMeasuredHeight;
-    private int mMFootMeasuredHeight;
+    private int       mMFootMeasuredHeight;
+
 
     public CostumeRecycleview(Context context) {
         this(context, null);
@@ -69,10 +74,10 @@ public class CostumeRecycleview
         mFootView = inflate(getContext(), R.layout.foot_view, null);
         //ButterKnife.bind(this,mFootView);
 
-        mLlLoadmore= (LinearLayout) mFootView.findViewById(R.id.ll_loadmore);
-        mLlLoadmore.measure(0,0);
+        mLlLoadmore = (LinearLayout) mFootView.findViewById(R.id.ll_loadmore);
+        mLlLoadmore.measure(0, 0);
         mMFootMeasuredHeight = mLlLoadmore.getMeasuredHeight();
-        mLlLoadmore.setPadding(0,-mMFootMeasuredHeight,0,0);
+        mLlLoadmore.setPadding(0, -mMFootMeasuredHeight, 0, 0);
 
     }
 
@@ -100,5 +105,50 @@ public class CostumeRecycleview
         mHeadView.addView(view);
 
     }
+    //处理事件滑出头布局
+    //这里采用是dispathontouchevent ,因为dispathtouch 使用的频率更高
 
+    private LinearLayoutManager lm;
+    @Override
+    public void setLayoutManager(LayoutManager layout) {
+        super.setLayoutManager(layout);
+        lm = (LinearLayoutManager) layout;
+
+    }
+
+    private float startX;
+    private float startY;
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                Log.e(TAG, "dispatchToucEvent:  按下" );
+                startX = ev.getX();
+                startY=ev.getY();
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                Log.e(TAG, "dispatchTouchEvent:  移动" );
+                float moveX =ev.getX();
+
+                float moveY =ev.getY();
+                //条件 是recycleview的第一个条目的角标为0  并且 向下移动
+                float disY = moveY -startY;
+                int dis = (int) (-mMHeadMeasuredHeight +disY);
+                int firstVisibleItemPosition = lm.findFirstVisibleItemPosition();
+                if (firstVisibleItemPosition==0  && disY>0){
+
+                    mLlRefresh.setPadding(0,dis,0,0);
+
+                }
+
+                break;
+            case MotionEvent.ACTION_UP:
+                Log.e(TAG, "dispatchTouchEvent:  弹起" );
+                break;
+        }
+
+
+        return super.dispatchTouchEvent(ev);
+    }
 }
