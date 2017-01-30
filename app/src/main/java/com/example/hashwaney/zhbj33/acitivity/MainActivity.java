@@ -122,7 +122,7 @@ public class MainActivity
       //  Log.d("result", "initMenuAdapter:  mNewsMenuBeenLists "+mNewsMenuBeenLists.toString());
        // mAdapter = new MenuAdapter(null);
         //mRecycleview.setAdapter(mAdapter);
-        mMenuAdapter =new MenuAdapter(this,null);
+        mMenuAdapter =new MenuAdapter(this,mNewsMenuBeenLists);
         mRecycleview.setLayoutManager(new LinearLayoutManager(this));
         mRecycleview.setAdapter(mMenuAdapter);
 

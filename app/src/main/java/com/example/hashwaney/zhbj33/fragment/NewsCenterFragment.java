@@ -1,6 +1,10 @@
 package com.example.hashwaney.zhbj33.fragment;
 
+import android.graphics.Color;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +13,15 @@ import android.widget.ImageButton;
 
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.acitivity.MainActivity;
+import com.example.hashwaney.zhbj33.adapter.NewsCenterGroupViewAdapter;
 import com.example.hashwaney.zhbj33.adapter.NewsContentAdapter;
 import com.example.hashwaney.zhbj33.base.BaseFragment;
 import com.example.hashwaney.zhbj33.base.NewsCenterTabPager;
 import com.example.hashwaney.zhbj33.base.OnLoadDataOperator;
 import com.example.hashwaney.zhbj33.bean.NewsCenterBean;
+import com.example.hashwaney.zhbj33.bean.NewsCenterGroupViewBean;
 import com.example.hashwaney.zhbj33.constant.Contant;
+import com.example.hashwaney.zhbj33.utils.RecycleViewDivider;
 import com.example.hashwaney.zhbj33.utils.ToastUtils;
 import com.google.gson.Gson;
 import com.viewpagerindicator.TabPageIndicator;
@@ -34,10 +41,10 @@ import okhttp3.Call;
 
 public class NewsCenterFragment
         extends BaseFragment
-        implements OnLoadDataOperator, ViewPager.OnPageChangeListener
+        implements OnLoadDataOperator, ViewPager.OnPageChangeListener, View.OnClickListener
 {
 
-    private static final String TA = "NewsCenterFragment";
+    private static final String TAG = "NewsCenterFragment";
     private ViewPager mViewpagerNewContent;
     private ImageButton              mIbNext;
     private TabPageIndicator         mTabPageIndicator;
@@ -48,6 +55,9 @@ public class NewsCenterFragment
     private NewsCenterTabPager mNewsCenterTabPager;
 
     private Map<Integer,View> cashViewMap =new HashMap<>();
+    private NewsCenterBean mNewsCenterBean;
+    private RecyclerView mRecycleGroup;
+
     @Override
     public void initTitle() {
         setIbMenu(true);
@@ -118,7 +128,7 @@ public class NewsCenterFragment
                        @Override
                        public void onError(Call call, Exception e, int id) {
                            //请求失败
-                           Log.d(TA, "onError:  e " + e.getMessage());
+                          // Log.d(TAG, "onError:  e " + e.getMessage());
                            ToastUtils.showToast(getActivity(), e.getMessage());
                        }
 
@@ -135,12 +145,13 @@ public class NewsCenterFragment
     //解析从网络上请求回来的数据
     private void processData(String response) {
         Gson           gson           = new Gson();
-        NewsCenterBean newsCenterBean = gson.fromJson(response, NewsCenterBean.class);
+        mNewsCenterBean = gson.fromJson(response, NewsCenterBean.class);
         //将数据传递给menu
         //menu是属于MainActivity的-----
         //创建一个方法用来接收Fragment传递过来的数据
-         mNewsMenuBeen = newsCenterBean.data;
-        ((MainActivity) getActivity()).setNewsMenuBeenLists(newsCenterBean.data);
+         mNewsMenuBeen = mNewsCenterBean.data;
+        if (mNewsMenuBeen !=null)
+             ((MainActivity) getActivity()).setNewsMenuBeenLists(mNewsCenterBean.data);
 
 
         //创建布局
@@ -190,6 +201,19 @@ public class NewsCenterFragment
         //组图有一个 menu的按钮
         if (position ==2){
             mIbPic.setVisibility(View.VISIBLE);
+            //加载组图布局
+            //创建一个视图
+            View view =creatGroupImageView();
+            //添加到容器中
+            addView(view);
+            //将数据添加到我们的集合中
+            cashViewMap.put(position,view);
+
+            //加载数据
+            loadGroupViewData(position);
+            //设置点击事件
+            mIbPic.setOnClickListener(this);
+
 
         }else{
             mIbPic.setVisibility(View.GONE);
@@ -211,4 +235,78 @@ public class NewsCenterFragment
 
 
     }
+
+    private void loadGroupViewData(int position) {
+        String url =Contant.REQUEST_DATA_HOST_URL+mNewsMenuBeen.get(position).url;
+        Log.e(TAG, "loadGroupViewData:  url " +url );
+
+
+        OkHttpUtils
+                .get()
+                .url(url)
+                .build().execute(new StringCallback() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                //请求失败
+                Log.e(TAG, "onError: 请求数据失败"+e.getMessage() );
+
+            }
+
+            @Override
+            public void onResponse(String response, int id) {
+                //请求成功
+                Log.e(TAG, "onResponse: "+response );
+                Gson gson =new Gson();
+                NewsCenterGroupViewBean centerGroupViewBean = gson.fromJson(response,
+                                                                                NewsCenterGroupViewBean.class);
+                mRecycleGroup.setAdapter(new NewsCenterGroupViewAdapter(getContext(),centerGroupViewBean.data.news));
+
+
+            }
+        });
+
+    }
+
+    private View creatGroupImageView() {
+//        getDecorView : 最顶层的view
+        View view = LayoutInflater.from(getContext())
+                                     .inflate(R.layout.
+                                                      newscenter_group_view,
+                                              (ViewGroup) getActivity().getWindow()
+                                                                       .getDecorView(),
+                                              false);
+        mRecycleGroup = (RecyclerView) view.findViewById(R.id.recycleview_group);
+        //设置布局管理器
+        mRecycleGroup.setLayoutManager(new LinearLayoutManager(getContext()));
+       // mRecycleGroup.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        return view;
+
+
+    }
+    private int GroupImageState =LISTSTATE;
+    private final static  int LISTSTATE=0;
+    private final static int GRIDSTATE=1;
+
+    //点击按钮实现网格和列表组图的切换
+    @Override
+    public void onClick(View v) {
+        //如果当前是列表组图 切换到 网格组图
+        if (GroupImageState == LISTSTATE){
+            GroupImageState =GRIDSTATE;
+            mIbPic.setBackgroundResource(R.drawable.icon_pic_grid_type);
+            mRecycleGroup.setLayoutManager(new GridLayoutManager(getContext(),2,GridLayoutManager.VERTICAL,false));
+            mRecycleGroup.addItemDecoration(new RecycleViewDivider(getContext(), GridLayoutManager.VERTICAL, 2,
+                                                                   Color.BLACK));
+
+        }else {
+            GroupImageState =LISTSTATE;
+            mIbPic.setBackgroundResource(R.drawable.icon_pic_list_type);
+            mRecycleGroup.setLayoutManager(new LinearLayoutManager(getContext()));
+            mRecycleGroup.addItemDecoration(new RecycleViewDivider(getContext(),LinearLayoutManager.HORIZONTAL,2,Color.BLACK));
+        }
+
+
+    }
+
 }
