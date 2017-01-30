@@ -29,9 +29,9 @@ public abstract class BaseFragment
     @BindView(R.id.tv_title)
     TextView    mTvTitle;
     @BindView(R.id.ib_pic)
-    ImageButton mIbPic;
+    public ImageButton mIbPic;
     @BindView(R.id.fl_container)
-    FrameLayout mFlContainer;
+   public FrameLayout mFlContainer;
 
     //加载布局
     @Nullable

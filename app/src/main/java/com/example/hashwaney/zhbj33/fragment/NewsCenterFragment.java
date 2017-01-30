@@ -22,7 +22,9 @@ import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 
@@ -45,6 +47,7 @@ public class NewsCenterFragment
     private List<NewsCenterBean.NewsTabBean> mNewsTabBeen;
     private NewsCenterTabPager mNewsCenterTabPager;
 
+    private Map<Integer,View> cashViewMap =new HashMap<>();
     @Override
     public void initTitle() {
         setIbMenu(true);
@@ -144,6 +147,8 @@ public class NewsCenterFragment
         View view = initContent();
         //加载布局
         addView(view);
+        //添加视图
+        cashViewMap.put(0,view);
 
 
     }
@@ -177,6 +182,33 @@ public class NewsCenterFragment
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
+    }
+    //切换内容
+    public void switchContent(int position) {
+        // 新闻 ,专题 ,组图,互动
+        //组图有一个 menu的按钮
+        if (position ==2){
+            mIbPic.setVisibility(View.VISIBLE);
+
+        }else{
+            mIbPic.setVisibility(View.GONE);
+
+        }
+        //创建视图 ----请求数据成功的时候进行视图的创建
+        //根据角标添加视图
+        View view = cashViewMap.get(position);
+        //判断视图是否为空
+        if (view==null){
+            //创建视图
+            mFlContainer.removeAllViews();//TODO  这行代码的添加确实是可以看出效果 ,完全是一个空视图,那么当创建了视图,然后添加到了map集合中,这行代码不加会怎样??
+        }else if (view !=null){
+            //移除视图 并且添加视图
+
+//            添加视图到BaseFragment
+            addView(view);
+        }
+
 
     }
 }
