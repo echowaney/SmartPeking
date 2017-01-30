@@ -12,5 +12,8 @@ public interface Contant {
     //新闻中心请求数据的url
     String NEWCENTER_REQUEST_URL=REQUEST_DATA_HOST_URL+"/categories.json";
 
+    //已经读取过的消息
+    String HAS_READ="has_read";
+
 
 }

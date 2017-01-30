@@ -22,7 +22,11 @@ public class SPUtils {
         sp.edit().putInt(key,value).commit();
 
     }
-
+    //存String
+    public static  void  saveString(Context context,String key,String value){
+        SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        sp.edit().putString(key,value).commit();
+    }
 
 
     //取出boolean状态值
@@ -34,5 +38,12 @@ public class SPUtils {
     public static int getInt(Context context,String key,int defaultVal){
         SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
         return sp.getInt(key,defaultVal);
+    }
+
+    //取出String
+    public static String getString(Context context,String key, String deval){
+        SharedPreferences sp = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+        return sp.getString(key,deval);
+
     }
 }
