@@ -136,7 +136,8 @@ public class NewsCenterFragment
                            ToastUtils.showToast(getActivity(), e.getMessage());
                            try {
                                String json = CashUtils.readCash(getContext(), url);
-                               processData(json);
+                               if (!TextUtils.isEmpty(json))
+                                        processData(json);
                            } catch (Exception e1) {
                                e1.printStackTrace();
                            }
@@ -147,6 +148,13 @@ public class NewsCenterFragment
                            //请求成功
                            processData(response);
                            Log.e(TAG, "aaaonResponse: "+response );
+                           //进行数据的保存
+                           try {
+                               CashUtils.saveCash(getContext(),url,response);
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                           }
+
 
                        }
                    });
@@ -156,7 +164,7 @@ public class NewsCenterFragment
     //解析从网络上请求回来的数据
     private void processData(String response) {
 //        hasLoadData=true;
-        hasLoadData=true;
+        //hasLoadData=true;
 
         Gson gson = new Gson();
         mNewsCenterBean = gson.fromJson(response, NewsCenterBean.class);
@@ -216,19 +224,6 @@ public class NewsCenterFragment
         //组图有一个 menu的按钮
         if (position == 2) {
             mIbPic.setVisibility(View.VISIBLE);
-            //加载组图布局
-            //创建一个视图
-            View view = creatGroupImageView();
-            //添加到容器中
-            addView(view);
-            //将数据添加到我们的集合中
-            cashViewMap.put(position, view);
-
-            //加载数据
-            loadGroupViewData(position);
-            //设置点击事件
-            mIbPic.setOnClickListener(this);
-
 
         } else {
             mIbPic.setVisibility(View.GONE);
@@ -241,9 +236,25 @@ public class NewsCenterFragment
         if (view == null) {
             //创建视图
             mFlContainer.removeAllViews();//TODO  这行代码的添加确实是可以看出效果 ,完全是一个空视图,那么当创建了视图,然后添加到了map集合中,这行代码不加会怎样??
+            if (position==2){
+                //加载组图布局
+                //创建一个视图
+               view = creatGroupImageView();
+                //添加到容器中
+                addView(view);
+                //将数据添加到我们的集合中,避免反复加载数据
+                cashViewMap.put(position, view);
+
+                //加载数据
+                loadGroupViewData(position);
+                //设置点击事件
+                mIbPic.setOnClickListener(this);
+            }
+
+
         } else if (view != null) {
             //移除视图 并且添加视图
-
+            mFlContainer.removeAllViews();
             //            添加视图到BaseFragment
             addView(view);
         }

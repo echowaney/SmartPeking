@@ -1,6 +1,7 @@
 package com.example.hashwaney.zhbj33.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.hashwaney.zhbj33.R;
+import com.example.hashwaney.zhbj33.acitivity.NewsDetailActivity;
 import com.example.hashwaney.zhbj33.bean.NewCenterTabBean;
 import com.squareup.picasso.Picasso;
 
@@ -49,11 +51,21 @@ public class RecycleViewNewsListAdapter
     @Override
     public void onBindViewHolder(NewListsViewHolder holder, int position)
     {
-        NewCenterTabBean.NewsBean newsBean = mNewsBeanList.get(position);
+        final NewCenterTabBean.NewsBean newsBean = mNewsBeanList.get(position);
 
         Picasso.with(mContext).load(newsBean.listimage).into(holder.mIvPic);
         holder.mTvTime.setText(newsBean.pubdate);
         holder.mTvTitle.setText(newsBean.title);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到新闻详情界面
+                Intent  intent =new Intent(mContext,NewsDetailActivity.class);
+                intent.putExtra("url",newsBean.url);
+                mContext.startActivity(intent);
+            }
+        });
+
     }
 
     @Override

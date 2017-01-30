@@ -143,6 +143,7 @@ public class MainActivity
         MainAdapter adapter = new MainAdapter(getSupportFragmentManager(),mFragmentList);
         mViewpager.setAdapter(adapter);
         mViewpager.addOnPageChangeListener(this);
+        mViewpager.setOffscreenPageLimit(5);
 
     }
 
@@ -186,7 +187,7 @@ public class MainActivity
 //        有些就不需要 ,只要是联网接口的实现类,就可以进行联网操作
         BaseFragment fragment = (BaseFragment) mFragmentList.get(itemid);
 
-        if (fragment instanceof OnLoadDataOperator &&!fragment.hasLoadData ){
+        if (fragment instanceof OnLoadDataOperator  ){
             //去网络加载数据
             ((OnLoadDataOperator)fragment).onLoadNetData();
 

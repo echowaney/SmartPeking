@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.example.hashwaney.zhbj33"
           xmlns:android="http://schemas.android.com/apk/res/android">
-<uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon_150"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".acitivity.SplashActivity"
-           >
+        <activity android:name=".acitivity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -19,8 +19,12 @@
         </activity>
         <activity android:name=".acitivity.GuideActivity">
         </activity>
-        <activity android:name=".acitivity.MainActivity"
-            android:theme="@style/Theme.PageIndicatorDefaults"
+        <activity
+            android:name=".acitivity.MainActivity"
+            android:theme="@style/Theme.PageIndicatorDefaults">
+        </activity>
+        <activity android:name=".acitivity.NewsDetailActivity"
+            android:theme="@style/AppTheme.FullSreen"
             >
         </activity>
     </application>
