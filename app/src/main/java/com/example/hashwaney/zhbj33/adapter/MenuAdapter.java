@@ -11,7 +11,10 @@ import android.widget.TextView;
 
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.acitivity.MainActivity;
+import com.example.hashwaney.zhbj33.base.BaseFragment;
 import com.example.hashwaney.zhbj33.bean.NewsCenterBean;
+import com.example.hashwaney.zhbj33.fragment.NewsCenterFragment;
+import com.example.hashwaney.zhbj33.utils.ToastUtils;
 
 import java.util.List;
 
@@ -92,8 +95,12 @@ public class MenuAdapter
                      *
                      * 2. 通过实例对象上的setTitle 方法来设置标题
                      */
-
-                   ((MainActivity) mContext).getCurrentFragment().setTitle(newsMenuBean.title);
+                    BaseFragment baseFragment = ((MainActivity) mContext).getCurrentFragment();
+                    baseFragment.setTitle(newsMenuBean.title);
+//
+//                    boolean b = NewsCenterFragment instanceof baseFragment;
+                    boolean b = baseFragment instanceof NewsCenterFragment;
+                    ToastUtils.showToast(mContext,b +"");
 
                 }
 

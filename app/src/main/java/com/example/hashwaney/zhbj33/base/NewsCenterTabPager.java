@@ -40,7 +40,8 @@ import okhttp3.Call;
  */
 
 public class NewsCenterTabPager
-        implements ViewPager.OnPageChangeListener, CostumeRecycleview.OnRefreshListener
+        implements ViewPager.OnPageChangeListener, CostumeRecycleview.OnRefreshListener,
+                   CostumeRecycleview.OnLoadMoreListener
 {
     private final static String TAG = "NewsCenterTabPager";
     // @BindView(R.id.viewpager)
@@ -71,6 +72,7 @@ public class NewsCenterTabPager
     public void stopSwitch() {
         mHandler.removeCallbacksAndMessages(null);
     }
+
 
 
     //进行无限轮播的任务----处理轮播的逻辑为什么要放在run方法中
@@ -182,11 +184,11 @@ public class NewsCenterTabPager
                                                               Color.parseColor("#ff0000")));
         //        mRecycleview.setAdapter();
 
-        RecycleViewNewsListAdapter adapter = new RecycleViewNewsListAdapter(mContext,
-                                                                            mNewCenterTabBean.data.news);
-        mRecycleview.setAdapter(adapter);
-        mRecycleview.setOnRefreshListener(this);
+        RecycleViewNewsListAdapter adapter = new RecycleViewNewsListAdapter(mContext, mNewCenterTabBean.data.news);
 
+        mRecycleview.setOnRefreshListener(this);
+        mRecycleview.setOnLoadMoreListener(this);
+        mRecycleview.setAdapter(adapter);
 
     }
 
@@ -350,9 +352,11 @@ public class NewsCenterTabPager
                            //请求数据成功
                            //                隐藏头布局
                            //解析数据
+                           Log.d(TAG, "onRefresh: "+response );
                            Gson gson = new Gson();
                            NewCenterTabBean newsCenterBean = gson.fromJson(response,
                                                                            NewCenterTabBean.class);
+                           //将服务器返回的数据加载集合的最开始位置
                            mNewCenterTabBean.data.news.addAll(0, newsCenterBean.data.news);
 
 
@@ -364,6 +368,42 @@ public class NewsCenterTabPager
 
 
     }
+
+    //上拉加载数据
+    @Override
+    public void onLoadMore() {
+        final String url = Contant.REQUEST_DATA_HOST_URL + mNewCenterTabBean.data.more;
+        Log.d(TAG, "onLoadMore:"+ url );
+        OkHttpUtils.get()
+                   .url(url)
+                   .build()
+                   .execute(new StringCallback() {
+                       @Override
+                       public void onError(Call call, Exception e, int id) {
+                           //请求数据失败
+                           //隐藏头布局
+                           mRecycleview.hideFootView();
+                       }
+
+                       @Override
+                       public void onResponse(String response, int id) {
+                           //请求数据成功
+                           //                隐藏头布局
+                           //解析数据
+                         //  Log.d(TAG, "onLoadMore: "+ response + " abc " +url);
+                           Gson gson = new Gson();
+                           NewCenterTabBean newsCenterBean = gson.fromJson(response,
+                                                                           NewCenterTabBean.class);
+                           //将服务器返回来的数据加载集合的最后
+                           mNewCenterTabBean.data.news.addAll(newsCenterBean.data.news);
+                           mRecycleview.hideFootView();
+
+
+                       }
+                   });
+
+    }
+
 
 
 }

@@ -59,6 +59,7 @@ public class CostumeRecycleview
     private Animation mDownAnimation;
     private Animation mUpAnimation;
     private float     mDisY;
+    private boolean hasLoadData; //有加载数据
 
 
     public CostumeRecycleview(Context context) {
@@ -178,12 +179,6 @@ public class CostumeRecycleview
 
     }
 
-    @Override
-    public void onScrollStateChanged(int state) {
-        super.onScrollStateChanged(state);
-
-
-    }
 
     private float startY;
 
@@ -217,7 +212,6 @@ public class CostumeRecycleview
                 int dis = (int) (-mMHeadMeasuredHeight + mDisY);
                 int firstVisibleItemPosition = lm.findFirstVisibleItemPosition();
                 if (firstVisibleItemPosition == 0 && mDisY > 0) {
-
 
 
                     //当前状态是下拉刷新 并且 dis >=0 了, 就切换到释放刷新
@@ -294,6 +288,17 @@ public class CostumeRecycleview
         getAdapter().notifyDataSetChanged();
 
     }
+    //如果没有加载过数据,就进行数据的加载,加载完成之后,进行状态的重置
+    public void hideFootView() {
+        hasLoadData =false;
+        //隐藏脚布局
+        mLlLoadmore.setPadding(0,-mMFootMeasuredHeight,0,0);
+
+        //刷新数据
+        getAdapter().notifyDataSetChanged();
+
+
+    }
 
 
     //当外界模块需要持有这种下拉刷新的功能的时候, 但是recyvleview又要持有这不同的对象 ,那么就想到了利用接口来进行统一的管理
@@ -308,4 +313,40 @@ public class CostumeRecycleview
         mOnRefreshListener = refreshListener;
 
     }
+
+
+    //定义一个接口,让外部实现这个接口,进行上拉加载数据
+    //条件 :最后一条数据以及是在空闲的状态下 进行上拉加载更多
+
+    //首先获取状态 复写一个方法
+    public interface OnLoadMoreListener {
+
+        void onLoadMore();
+    }
+
+    private OnLoadMoreListener mOnLoadMoreListener;
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener){
+        mOnLoadMoreListener =onLoadMoreListener;
+
+    }
+
+    @Override
+    public void onScrollStateChanged(int state) {
+//        RecyclerView.SCROLL_STATE_DRAGGING      //当前是拉出来的状态
+//        RecyclerView.SCROLL_STATE_IDLE        //当前是空闲状态 静止
+//            RecyclerView.SCROLL_STATE_SETTLING  // 滚动的状态
+        if (state==RecyclerView.SCROLL_STATE_IDLE && lm.findLastVisibleItemPosition()==getAdapter().getItemCount()-1 && !hasLoadData){
+            hasLoadData=true;//正在加载数据
+            //显示脚
+            mLlLoadmore.setPadding(0,0,0,0);
+            //执行加载更多数据
+            if (mOnLoadMoreListener !=null){
+                mOnLoadMoreListener.onLoadMore();
+            }
+
+        }
+
+
+    }
+
 }
