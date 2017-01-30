@@ -1,11 +1,11 @@
 [
     {
-        "merged": "E:\\DemoForPersonal\\ZHBJ33\\library-pagerindicator\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\vpi__tab_selected_holo.9.png",
-        "source": "E:\\DemoForPersonal\\ZHBJ33\\library-pagerindicator\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\vpi__tab_selected_holo.9.png"
-    },
-    {
         "merged": "E:\\DemoForPersonal\\ZHBJ33\\library-pagerindicator\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\vpi__tab_selected_pressed_holo.9.png",
         "source": "E:\\DemoForPersonal\\ZHBJ33\\library-pagerindicator\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\vpi__tab_selected_pressed_holo.9.png"
+    },
+    {
+        "merged": "E:\\DemoForPersonal\\ZHBJ33\\library-pagerindicator\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\vpi__tab_selected_holo.9.png",
+        "source": "E:\\DemoForPersonal\\ZHBJ33\\library-pagerindicator\\build\\intermediates\\bundles\\debug\\res\\drawable-hdpi-v4\\vpi__tab_selected_holo.9.png"
     },
     {
         "merged": "E:\\DemoForPersonal\\ZHBJ33\\library-pagerindicator\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-hdpi-v4\\vpi__tab_selected_focused_holo.9.png",
