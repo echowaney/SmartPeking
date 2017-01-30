@@ -373,6 +373,7 @@ public class NewsCenterTabPager
                            } catch (Exception e1) {
                                e1.printStackTrace();
                            }
+                           startSwitch();
                        }
 
                        @Override
@@ -389,6 +390,7 @@ public class NewsCenterTabPager
                            } catch (Exception e) {
                                e.printStackTrace();
                            }
+                           startSwitch();
 
 
                        }
