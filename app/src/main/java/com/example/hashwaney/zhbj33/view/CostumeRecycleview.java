@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.adapter.XWrapRecycleViewAdapter;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +58,7 @@ public class CostumeRecycleview
     private final static int REFRESHING_STATE      = 2;
     private Animation mDownAnimation;
     private Animation mUpAnimation;
-    private float mDisY;
+    private float     mDisY;
 
 
     public CostumeRecycleview(Context context) {
@@ -145,15 +148,19 @@ public class CostumeRecycleview
 
 
     //重写setAdapter 由父类进行重写,方能生效----自定义的并没有进行任何操作,因此父亲重写
-
-
     @Override
     public void setAdapter(Adapter adapter) {
         adapter = new XWrapRecycleViewAdapter(mHeadView, mFootView, adapter);
         super.setAdapter(adapter);
     }
 
+    //d定义一个view来接收 轮播图 解决 轮播图的回缩问题
+    private View switchView;
+
+    //添加轮播图
     public void addSwitchImage(View view) {
+        switchView = view;
+
         mHeadView.addView(view);
 
     }
@@ -162,16 +169,22 @@ public class CostumeRecycleview
 
     private LinearLayoutManager lm;
 
-
-
+    //设置布局管理器
     @Override
     public void setLayoutManager(LayoutManager layout) {
         super.setLayoutManager(layout);
         lm = (LinearLayoutManager) layout;
+        //        getLocationInWindow();
 
     }
 
-    private float startX;
+    @Override
+    public void onScrollStateChanged(int state) {
+        super.onScrollStateChanged(state);
+
+
+    }
+
     private float startY;
 
     @Override
@@ -179,13 +192,24 @@ public class CostumeRecycleview
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Log.e(TAG, "dispatchToucEvent:  按下");
-                startX = ev.getX();
                 startY = ev.getY();
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 Log.e(TAG, "dispatchTouchEvent:  移动");
-                float moveX = ev.getX();
+
+                //在移动的过程中 轮播图会出现回缩的效果
+                // 判断recycleview的位置与轮播图的位置是不是同一个位置
+                int[] rvLocation = new int[2];
+                getLocationInWindow(rvLocation);
+                int rvY = rvLocation[1];
+                //轮播图的位置
+                int[] switchLocation = new int[2];
+                switchView.getLocationInWindow(switchLocation);
+                int switchY = switchLocation[1];
+                if (switchY < rvY) {
+                    return super.dispatchTouchEvent(ev);
+                }
 
                 float moveY = ev.getY();
                 //条件 是recycleview的第一个条目的角标为0  并且 向下移动
@@ -193,8 +217,11 @@ public class CostumeRecycleview
                 int dis = (int) (-mMHeadMeasuredHeight + mDisY);
                 int firstVisibleItemPosition = lm.findFirstVisibleItemPosition();
                 if (firstVisibleItemPosition == 0 && mDisY > 0) {
-                    //当前状态是下拉刷新 并且 dis ==0 了, 就切换到释放刷新
-                    if ( HeadState == DOWN_REFRESH_STATE    && dis == 0) {
+
+
+
+                    //当前状态是下拉刷新 并且 dis >=0 了, 就切换到释放刷新
+                    if (HeadState == DOWN_REFRESH_STATE && dis >= 0) {
                         HeadState = RELEASE_REFRESH_STATE;
                         //修改文字
                         mTvRefresh.setText("释放刷新");
@@ -218,11 +245,11 @@ public class CostumeRecycleview
                 Log.e(TAG, "dispatchTouchEvent:  弹起");
                 //处理条件 : 条目角标同样也是为0 ,并且y方向的距离大于0 有向下移动
                 int visibleItemPosition = lm.findFirstVisibleItemPosition();
-                if (visibleItemPosition==0 && mDisY >0){
-                    if (HeadState == DOWN_REFRESH_STATE){
+                if (visibleItemPosition == 0 && mDisY > 0) {
+                    if (HeadState == DOWN_REFRESH_STATE) {
                         //直接让他不显示
-                        mLlRefresh.setPadding(0,-mMHeadMeasuredHeight,0,0);
-                    }else if (HeadState ==RELEASE_REFRESH_STATE){
+                        mLlRefresh.setPadding(0, -mMHeadMeasuredHeight, 0, 0);
+                    } else if (HeadState == RELEASE_REFRESH_STATE) {
                         //更改状态
                         HeadState = REFRESHING_STATE;
                         //隐藏箭头 ,清除动画
@@ -233,13 +260,52 @@ public class CostumeRecycleview
                         //更改文字
                         mTvRefresh.setText("加载更多数据...");
                         //停留在
-                        mLlRefresh.setPadding(0,0,0,0);
+                        mLlRefresh.setPadding(0, 0, 0, 0);
                         //加载数据 TODO
+                        if (mOnRefreshListener != null) {
+                            mOnRefreshListener.onRefresh();
+                        }
                     }
                 }
 
                 break;
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    //隐藏头布局
+    public void hideHeadView(boolean loadData) {
+        //1, 复位状态为下拉刷新, 隐藏进度条 ,显示箭头, 退回去,不显示
+        //修改文字
+        //2. 根据请求数据的成功与否 更新上一次的时间
+        HeadState = DOWN_REFRESH_STATE;
+        mPbRefresh.setVisibility(View.INVISIBLE);
+        mTvRefresh.setText("下拉刷新");
+        mIvArrow.setVisibility(VISIBLE);
+        if (loadData) {
+            String dateStr = DateFormat.getDateFormat(getContext())
+                                       .format(new Date(System.currentTimeMillis()));
+            String timeStr = DateFormat.getTimeFormat(getContext())
+                                       .format(new Date(System.currentTimeMillis()));
+            mTvTime.setText(dateStr + " " + timeStr);
+        }
+        mLlRefresh.setPadding(0, -mMHeadMeasuredHeight, 0, 0);
+        //刷新数据
+        getAdapter().notifyDataSetChanged();
+
+    }
+
+
+    //当外界模块需要持有这种下拉刷新的功能的时候, 但是recyvleview又要持有这不同的对象 ,那么就想到了利用接口来进行统一的管理
+    public interface OnRefreshListener {
+        void onRefresh();
+    }
+
+    private OnRefreshListener mOnRefreshListener;
+
+    public void setOnRefreshListener(OnRefreshListener refreshListener)
+    {
+        mOnRefreshListener = refreshListener;
+
     }
 }

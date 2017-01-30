@@ -84,9 +84,9 @@ public class MainActivity
     //定义一个方法去接收来自NewsCenterFragment的数据
 
     public void  setNewsMenuBeenLists(List<NewsCenterBean.NewsMenuBean> newsMenuBeenLists){
-        mNewsMenuBeenLists.clear();
-//        mNewsMenuBeenLists =newsMenuBeenLists;
-        mNewsMenuBeenLists.addAll(newsMenuBeenLists);
+//        mNewsMenuBeenLists.clear();
+        mNewsMenuBeenLists =newsMenuBeenLists;
+//        mNewsMenuBeenLists.addAll(newsMenuBeenLists);
         Log.d("result", "initMenuAdapter:  mNewsMenuBeenLists "+mNewsMenuBeenLists.size());
         //数据是请求到了，但是需要将数据传递给menuAdapter -- 那么就应该去adapter中定义一个方法用来接收从activity中传过来的数据
         //在将数据传递到adapter中

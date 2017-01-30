@@ -136,8 +136,8 @@ public class NewsCenterFragment
         //将数据传递给menu
         //menu是属于MainActivity的-----
         //创建一个方法用来接收Fragment传递过来的数据
-        mNewsMenuBeen = newsCenterBean.data;
-        ((MainActivity) getActivity()).setNewsMenuBeenLists(mNewsMenuBeen);
+         mNewsMenuBeen = newsCenterBean.data;
+        ((MainActivity) getActivity()).setNewsMenuBeenLists(newsCenterBean.data);
 
 
         //创建布局

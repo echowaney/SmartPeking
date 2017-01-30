@@ -16,6 +16,7 @@ import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.adapter.RecycleViewNewsListAdapter;
 import com.example.hashwaney.zhbj33.adapter.SwitchImageAdapter;
 import com.example.hashwaney.zhbj33.bean.NewCenterTabBean;
+import com.example.hashwaney.zhbj33.constant.Contant;
 import com.example.hashwaney.zhbj33.utils.RecycleViewDivider;
 import com.example.hashwaney.zhbj33.view.CostumeRecycleview;
 import com.example.hashwaney.zhbj33.view.ImageViewSwitchViewpager;
@@ -39,17 +40,17 @@ import okhttp3.Call;
  */
 
 public class NewsCenterTabPager
-        implements ViewPager.OnPageChangeListener
+        implements ViewPager.OnPageChangeListener, CostumeRecycleview.OnRefreshListener
 {
     private final static String TAG = "NewsCenterTabPager";
-   // @BindView(R.id.viewpager)
+    // @BindView(R.id.viewpager)
     ImageViewSwitchViewpager mViewpager;
-   // @BindView(R.id.ll_poitn_container)
+    // @BindView(R.id.ll_poitn_container)
     LinearLayout             mLlPoitnContainer;
     @BindView(R.id.recycleview)
-    CostumeRecycleview       mRecycleview;
-   // @BindView(R.id.tv_title)
-    TextView                 mTextView;
+    CostumeRecycleview mRecycleview;
+    // @BindView(R.id.tv_title)
+    TextView mTextView;
     private Context mContext;
     public  View    mView;// 提取这个view是为了方便外面可以调用这个成员变量
 
@@ -71,6 +72,7 @@ public class NewsCenterTabPager
         mHandler.removeCallbacksAndMessages(null);
     }
 
+
     //进行无限轮播的任务----处理轮播的逻辑为什么要放在run方法中
     class SwitchTask
             implements Runnable
@@ -79,13 +81,16 @@ public class NewsCenterTabPager
         @Override
         public void run() {
             //处理轮播的逻辑
-            int currentItem = mViewpager.getCurrentItem();
-            if (currentItem == mNewCenterTabBean.data.topnews.size() - 1) {
-                currentItem = 0;
-            } else {
-                currentItem++;
+            if (mViewpager != null) {
+                int currentItem = mViewpager.getCurrentItem();
+                if (currentItem == mNewCenterTabBean.data.topnews.size() - 1) {
+                    currentItem = 0;
+                } else {
+                    currentItem++;
+                }
+                mViewpager.setCurrentItem(currentItem);
             }
-            mViewpager.setCurrentItem(currentItem);
+
             mHandler.postDelayed(this, 2000);
         }
     }
@@ -155,14 +160,14 @@ public class NewsCenterTabPager
     }
 
     private void initHeadViewLayout() {
-//        View view =View.inflate(mContext,R.layout.switch_image_view,null);
+        //        View view =View.inflate(mContext,R.layout.switch_image_view,null);
         View view = LayoutInflater.from(mContext)
                                   .inflate(R.layout.switch_image_view, null);
-        mViewpager= (ImageViewSwitchViewpager) view.findViewById(R.id.switchviewpager);
+        mViewpager = (ImageViewSwitchViewpager) view.findViewById(R.id.switchviewpager);
         mLlPoitnContainer = (LinearLayout) view.findViewById(R.id.ll_poitn_container);
-        mTextView= (TextView) view.findViewById(R.id.tv_title);
-//        view.measure(0,0);
-//        view.getHeight();
+        mTextView = (TextView) view.findViewById(R.id.tv_title);
+        //        view.measure(0,0);
+        //        view.getHeight();
 
         mRecycleview.addSwitchImage(view);
 
@@ -175,12 +180,12 @@ public class NewsCenterTabPager
         mRecycleview.addItemDecoration(new RecycleViewDivider(mContext, LinearLayout.HORIZONTAL, 1,
 
                                                               Color.parseColor("#ff0000")));
-//        mRecycleview.setAdapter();
+        //        mRecycleview.setAdapter();
 
-        RecycleViewNewsListAdapter adapter =new RecycleViewNewsListAdapter(mContext,mNewCenterTabBean.data.news);
+        RecycleViewNewsListAdapter adapter = new RecycleViewNewsListAdapter(mContext,
+                                                                            mNewCenterTabBean.data.news);
         mRecycleview.setAdapter(adapter);
-
-
+        mRecycleview.setOnRefreshListener(this);
 
 
     }
@@ -277,23 +282,22 @@ public class NewsCenterTabPager
 
         //修正的角标
         int pageIndex = 0;
-        int size = mTopnews.size();
-        if (position==0){
-            pageIndex = size-1;
-//            mViewpager.setCurrentItem(pageIndex);
+        int size      = mTopnews.size();
+        if (position == 0) {
+            pageIndex = size - 1;
+            //            mViewpager.setCurrentItem(pageIndex);
             //快速切换到最后一个页面
-            mViewpager.setCurrentItem(size,false);
+            mViewpager.setCurrentItem(size, false);
 
-        }else  if (position ==size+1){
+        } else if (position == size + 1) {
 
-            pageIndex =0;
-//            mViewpager.setCurrentItem(pageIndex);
+            pageIndex = 0;
+            //            mViewpager.setCurrentItem(pageIndex);
             //快速切换到第一个页面
-            mViewpager.setCurrentItem(1,false);
+            mViewpager.setCurrentItem(1, false);
         } else {
-            pageIndex =position-1;
+            pageIndex = position - 1;
         }
-
 
 
         //        String title = mTopnews.get(position).title;
@@ -323,6 +327,41 @@ public class NewsCenterTabPager
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
+    }
+
+    //加载数据---回调下拉刷新 加载更多数据
+    @Override
+    public void onRefresh() {
+        String url = Contant.REQUEST_DATA_HOST_URL + mNewCenterTabBean.data.more;
+        OkHttpUtils.get()
+                   .url(url)
+                   .build()
+                   .execute(new StringCallback() {
+                       @Override
+                       public void onError(Call call, Exception e, int id) {
+                           //请求数据失败
+                           //隐藏头布局
+                           mRecycleview.hideHeadView(false);
+                       }
+
+                       @Override
+                       public void onResponse(String response, int id) {
+                           //请求数据成功
+                           //                隐藏头布局
+                           //解析数据
+                           Gson gson = new Gson();
+                           NewCenterTabBean newsCenterBean = gson.fromJson(response,
+                                                                           NewCenterTabBean.class);
+                           mNewCenterTabBean.data.news.addAll(0, newsCenterBean.data.news);
+
+
+                           mRecycleview.hideHeadView(true);
+
+
+                       }
+                   });
+
 
     }
 
