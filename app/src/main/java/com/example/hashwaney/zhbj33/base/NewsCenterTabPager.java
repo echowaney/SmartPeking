@@ -183,6 +183,7 @@ public class NewsCenterTabPager
         //        View view =View.inflate(mContext,R.layout.switch_image_view,null);
         View view = LayoutInflater.from(mContext)
                                   .inflate(R.layout.switch_image_view, null);
+
         mViewpager = (ImageViewSwitchViewpager) view.findViewById(R.id.switchviewpager);
         mLlPoitnContainer = (LinearLayout) view.findViewById(R.id.ll_poitn_container);
         mTextView = (TextView) view.findViewById(R.id.tv_title);

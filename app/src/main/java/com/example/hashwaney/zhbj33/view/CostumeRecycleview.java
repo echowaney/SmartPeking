@@ -59,7 +59,7 @@ public class CostumeRecycleview
     private Animation mDownAnimation;
     private Animation mUpAnimation;
     private float     mDisY;
-    private boolean hasLoadData; //有加载数据
+    private boolean   hasLoadData; //有加载数据
 
 
     public CostumeRecycleview(Context context) {
@@ -160,6 +160,13 @@ public class CostumeRecycleview
 
     //添加轮播图
     public void addSwitchImage(View view) {
+        //修复bug 切换不同的tab 会出现增加多个头 处理方式 先移除然后进行添加,如何移除呢>
+        //获取到头的总数,判断是否为2
+        //        mHeadView.getChildCount() ==2
+
+        if (mHeadView.getChildCount() == 2) {
+            mHeadView.removeViewAt(1);
+        }
         switchView = view;
 
         mHeadView.addView(view);
@@ -288,11 +295,12 @@ public class CostumeRecycleview
         getAdapter().notifyDataSetChanged();
 
     }
+
     //如果没有加载过数据,就进行数据的加载,加载完成之后,进行状态的重置
     public void hideFootView() {
-        hasLoadData =false;
+        hasLoadData = false;
         //隐藏脚布局
-        mLlLoadmore.setPadding(0,-mMFootMeasuredHeight,0,0);
+        mLlLoadmore.setPadding(0, -mMFootMeasuredHeight, 0, 0);
 
         //刷新数据
         getAdapter().notifyDataSetChanged();
@@ -325,22 +333,23 @@ public class CostumeRecycleview
     }
 
     private OnLoadMoreListener mOnLoadMoreListener;
-    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener){
-        mOnLoadMoreListener =onLoadMoreListener;
+
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        mOnLoadMoreListener = onLoadMoreListener;
 
     }
 
     @Override
     public void onScrollStateChanged(int state) {
-//        RecyclerView.SCROLL_STATE_DRAGGING      //当前是拉出来的状态
-//        RecyclerView.SCROLL_STATE_IDLE        //当前是空闲状态 静止
-//            RecyclerView.SCROLL_STATE_SETTLING  // 滚动的状态
-        if (state==RecyclerView.SCROLL_STATE_IDLE && lm.findLastVisibleItemPosition()==getAdapter().getItemCount()-1 && !hasLoadData){
-            hasLoadData=true;//正在加载数据
+        //        RecyclerView.SCROLL_STATE_DRAGGING      //当前是拉出来的状态
+        //        RecyclerView.SCROLL_STATE_IDLE        //当前是空闲状态 静止
+        //            RecyclerView.SCROLL_STATE_SETTLING  // 滚动的状态
+        if (state == RecyclerView.SCROLL_STATE_IDLE && lm.findLastVisibleItemPosition() == getAdapter().getItemCount() - 1 && !hasLoadData) {
+            hasLoadData = true;//正在加载数据
             //显示脚
-            mLlLoadmore.setPadding(0,0,0,0);
+            mLlLoadmore.setPadding(0, 0, 0, 0);
             //执行加载更多数据
-            if (mOnLoadMoreListener !=null){
+            if (mOnLoadMoreListener != null) {
                 mOnLoadMoreListener.onLoadMore();
             }
 
