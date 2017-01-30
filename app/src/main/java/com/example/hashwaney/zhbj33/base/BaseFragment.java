@@ -31,7 +31,9 @@ public abstract class BaseFragment
     @BindView(R.id.ib_pic)
     public ImageButton mIbPic;
     @BindView(R.id.fl_container)
-   public FrameLayout mFlContainer;
+    public FrameLayout mFlContainer;
+    //定义一个标志位
+    public boolean     hasLoadData;
 
     //加载布局
     @Nullable
@@ -48,14 +50,16 @@ public abstract class BaseFragment
 
 
     }
+
     //设置标题 子类必须实现
     public abstract void initTitle();
 
 
     //初始化内容
-    public abstract  View initContent();
+    public abstract View initContent();
+
     //添加内容
-    public void addView(View view){
+    public void addView(View view) {
 
         //清空容器
         mFlContainer.removeAllViews();
@@ -65,20 +69,26 @@ public abstract class BaseFragment
 
 
     //设置标题
-    public void setTitle(String title){
+    public void setTitle(String title) {
         mTvTitle.setText(title);
 
     }
+
     //设置菜单按钮
     public void setIbMenu(boolean isShow)
     {
-        mIbMenu.setVisibility(isShow?View.VISIBLE:View.GONE);
+        mIbMenu.setVisibility(isShow
+                              ? View.VISIBLE
+                              : View.GONE);
 
     }
-    //设置组图按钮
-    public void setIbPic(boolean isShow){
 
-        mIbPic.setVisibility(isShow?View.VISIBLE:View.GONE);
+    //设置组图按钮
+    public void setIbPic(boolean isShow) {
+
+        mIbPic.setVisibility(isShow
+                             ? View.VISIBLE
+                             : View.GONE);
     }
 
 
@@ -93,15 +103,14 @@ public abstract class BaseFragment
     }
 
     //将不同的交由子类去实现
-//    public abstract void setContent();
-
+    //    public abstract void setContent();
 
 
     @OnClick(R.id.ib_menu)
     public void onClick() {
         //控制slidingmenu的切换
         //Slidingmenu ----MainActivity
-        ((MainActivity)getActivity()).mSlidingMenu.toggle();
+        ((MainActivity) getActivity()).mSlidingMenu.toggle();
 
 
     }

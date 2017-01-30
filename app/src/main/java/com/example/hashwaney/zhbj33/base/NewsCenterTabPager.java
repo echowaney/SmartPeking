@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,9 @@ import com.example.hashwaney.zhbj33.adapter.RecycleViewNewsListAdapter;
 import com.example.hashwaney.zhbj33.adapter.SwitchImageAdapter;
 import com.example.hashwaney.zhbj33.bean.NewCenterTabBean;
 import com.example.hashwaney.zhbj33.constant.Contant;
+import com.example.hashwaney.zhbj33.utils.CashUtils;
 import com.example.hashwaney.zhbj33.utils.RecycleViewDivider;
+import com.example.hashwaney.zhbj33.utils.ToastUtils;
 import com.example.hashwaney.zhbj33.view.CostumeRecycleview;
 import com.example.hashwaney.zhbj33.view.ImageViewSwitchViewpager;
 import com.google.gson.Gson;
@@ -114,7 +117,7 @@ public class NewsCenterTabPager
     }
 
     //暴露一个方法让外部实现网络加载数据,当页面被点击切换了,就去加载网络数据,并且去执行初始化轮播图,小圆点
-    public void loadDataFormNet(String url) {
+    public void loadDataFormNet(final String url) {
         OkHttpUtils.get()
                    .url(url)
                    .build()
@@ -123,6 +126,15 @@ public class NewsCenterTabPager
                        public void onError(Call call, Exception e, int id) {
                            //请求数据失败
                            Log.d(TAG, "onError: " + e.getMessage());
+                           try {
+                               String json = CashUtils.readCash(mContext, url);
+                               if (!TextUtils.isEmpty(json)){
+                                   processData(json);
+                               }
+
+                           } catch (Exception e1) {
+                               e1.printStackTrace();
+                           }
                        }
 
                        @Override
@@ -131,6 +143,12 @@ public class NewsCenterTabPager
                            Log.e(TAG, "onResponse: " + response);
                            //处理网络数据
                            processData(response);
+                           //进行数据缓存
+                           try {
+                               CashUtils.saveCash(mContext,url,response);
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                           }
                        }
                    });
 
@@ -335,7 +353,7 @@ public class NewsCenterTabPager
     //加载数据---回调下拉刷新 加载更多数据
     @Override
     public void onRefresh() {
-        String url = Contant.REQUEST_DATA_HOST_URL + mNewCenterTabBean.data.more;
+        final String url = Contant.REQUEST_DATA_HOST_URL + mNewCenterTabBean.data.more;
         OkHttpUtils.get()
                    .url(url)
                    .build()
@@ -345,6 +363,15 @@ public class NewsCenterTabPager
                            //请求数据失败
                            //隐藏头布局
                            mRecycleview.hideHeadView(false);
+                           try {
+                               String json = CashUtils.readCash(mContext, url);
+                               if (!TextUtils.isEmpty(json)){
+                                  processRefreshData(json);
+
+                               }
+                           } catch (Exception e1) {
+                               e1.printStackTrace();
+                           }
                        }
 
                        @Override
@@ -353,20 +380,30 @@ public class NewsCenterTabPager
                            //                隐藏头布局
                            //解析数据
                            Log.d(TAG, "onRefresh: "+response );
-                           Gson gson = new Gson();
-                           NewCenterTabBean newsCenterBean = gson.fromJson(response,
-                                                                           NewCenterTabBean.class);
-                           //将服务器返回的数据加载集合的最开始位置
-                           mNewCenterTabBean.data.news.addAll(0, newsCenterBean.data.news);
 
-
-                           mRecycleview.hideHeadView(true);
+                           processRefreshData(response);
+                           //进行数据的缓存
+                           try {
+                               CashUtils.saveCash(mContext,url,response);
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                           }
 
 
                        }
                    });
 
 
+    }
+
+    private void processRefreshData(String response) {Gson gson = new Gson();
+        NewCenterTabBean newsCenterBean = gson.fromJson(response,
+                                                        NewCenterTabBean.class);
+        //将服务器返回的数据加载集合的最开始位置
+        mNewCenterTabBean.data.news.addAll(0, newsCenterBean.data.news);
+
+
+        mRecycleview.hideHeadView(true);
     }
 
     //上拉加载数据
@@ -383,6 +420,16 @@ public class NewsCenterTabPager
                            //请求数据失败
                            //隐藏头布局
                            mRecycleview.hideFootView();
+                           ToastUtils.showToast(mContext,"获取数据失败");
+                           //读取缓存数据
+                           try {
+                               String json = CashUtils.readCash(mContext, url);
+                               if(!TextUtils.isEmpty(json))
+                                    processLoadMoreData(json);
+                           } catch (Exception e1) {
+                               e1.printStackTrace();
+                           }
+
                        }
 
                        @Override
@@ -391,12 +438,14 @@ public class NewsCenterTabPager
                            //                隐藏头布局
                            //解析数据
                          //  Log.d(TAG, "onLoadMore: "+ response + " abc " +url);
-                           Gson gson = new Gson();
-                           NewCenterTabBean newsCenterBean = gson.fromJson(response,
-                                                                           NewCenterTabBean.class);
-                           //将服务器返回来的数据加载集合的最后
-                           mNewCenterTabBean.data.news.addAll(newsCenterBean.data.news);
-                           mRecycleview.hideFootView();
+
+                           processLoadMoreData(response);
+                           //进行数据的保存
+                           try {
+                               CashUtils.saveCash(mContext,url,response);
+                           } catch (Exception e) {
+                               e.printStackTrace();
+                           }
 
 
                        }
@@ -404,6 +453,13 @@ public class NewsCenterTabPager
 
     }
 
+    private void processLoadMoreData(String response) {Gson gson = new Gson();
+        NewCenterTabBean newsCenterBean = gson.fromJson(response,
+                                                        NewCenterTabBean.class);
+        //将服务器返回来的数据加载集合的最后
+        mNewCenterTabBean.data.news.addAll(newsCenterBean.data.news);
+        mRecycleview.hideFootView();
+    }
 
 
 }

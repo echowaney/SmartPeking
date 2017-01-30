@@ -62,6 +62,7 @@ public class MainActivity
     private RecyclerView mRecycleview;
     private MenuAdapter mMenuAdapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -184,7 +185,8 @@ public class MainActivity
         //这里就是加载数据的入口 当点击了底部button的时候,就得到相应的fragment,其中有些fragment需要联网
 //        有些就不需要 ,只要是联网接口的实现类,就可以进行联网操作
         BaseFragment fragment = (BaseFragment) mFragmentList.get(itemid);
-        if (fragment instanceof OnLoadDataOperator){
+
+        if (fragment instanceof OnLoadDataOperator &&!fragment.hasLoadData ){
             //去网络加载数据
             ((OnLoadDataOperator)fragment).onLoadNetData();
 
