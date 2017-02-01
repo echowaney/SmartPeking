@@ -27,6 +27,9 @@ import butterknife.ButterKnife;
 
 /**
  * Created by HashWaney on 2017/1/29.
+ * 该类具有上拉刷新和下拉加载数据的功能
+ *
+ *
  */
 
 public class CostumeRecycleview

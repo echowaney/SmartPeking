@@ -268,6 +268,7 @@ public class NewsCenterTabPager
             Picasso.with(mContext)
                    .load(topimage)
                    .into(imageView);
+//            BitmapUtils.loadBitmap(mContext,imageView, topimage);
             mImageViewList.add(imageView);
 
 

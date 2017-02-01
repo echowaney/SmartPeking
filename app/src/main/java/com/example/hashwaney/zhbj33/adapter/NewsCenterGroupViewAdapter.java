@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.example.hashwaney.zhbj33.R;
 import com.example.hashwaney.zhbj33.bean.NewsCenterGroupViewBean;
-import com.squareup.picasso.Picasso;
+import com.example.hashwaney.zhbj33.utils.bitmap.BitmapUtils;
 
 import java.util.List;
 
@@ -48,9 +48,10 @@ public class NewsCenterGroupViewAdapter
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         NewsCenterGroupViewBean.NewsCenterGroupNewsBean groupNewsBean = mList.get(position);
         ViewHolder viewHolder = (ViewHolder) holder;
-        Picasso.with(mContext).load( groupNewsBean.listimage).into(viewHolder.mIvPic);
+//      Picasso.with(mContext).load(groupNewsBean.listimage).into(viewHolder.mIvPic);
+        BitmapUtils.loadBitmap(mContext, viewHolder.mIvPic, groupNewsBean.listimage);
         viewHolder.mTvTitle.setText(groupNewsBean.title);
-
+//
 
     }
 

@@ -60,6 +60,7 @@ public class XWrapRecycleViewAdapter
             return new FootViewHolder(mFootView);
         }
         return mAdapter.onCreateViewHolder(parent, viewType);
+//        return super.onCreateViewHolder(parent,viewType);
     }
 
 
@@ -77,6 +78,7 @@ public class XWrapRecycleViewAdapter
         int adapterCount = mAdapter.getItemCount();
         if (adjPostion < adapterCount) {
             mAdapter.onBindViewHolder(holder, adjPostion);
+
         }
         //              if (position < mAdapter.getItemCount() + 1) {
         //                  mAdapter.onBindViewHolder(holder, position); //角标越界
